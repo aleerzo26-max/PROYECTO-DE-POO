@@ -9,7 +9,7 @@ class Asignatura:
         self.__creditos = creditos
         self.__estado = estado
 
-    # Propiedades
+    # Propiedades 
     @property
     def id(self) -> int:
         return self.__id
@@ -17,6 +17,7 @@ class Asignatura:
     @property
     def nombre(self) -> str:
         return self.__nombre
+
 
     # Métodos (solo estructura)
     def crearAsignatura(self) -> None:
