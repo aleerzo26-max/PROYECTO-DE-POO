@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-form">
+    <h2>Iniciar Sesión</h2>
+    <form method="post">
+        <input type="email" name="email" placeholder="Correo" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <button type="submit">Ingresar</button>
+    </form>
+    <p><strong>Usuarios de prueba:</strong><br>
+    Estudiante: ale@gmail.com / 0000<br>
+    Docente: jimmy@gmail.com / 0000<br>
+    Administrador: alex@gmail.com / 0000<br>
+    Coordinador: pepe@gmail.com / 0000</p>
+</div>
+{% endblock %}
