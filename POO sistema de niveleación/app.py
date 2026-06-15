@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models.estudiante import Estudiante
-from models.docente import Docente
-from models.administrador import Administrador
-from models.coordinador import Coordinador
+from models.usuario_factory import UsuarioFactory
 from models.tarea import Tarea
 from models.curso import Curso, Horario, Modalidad
 import os
@@ -23,13 +20,61 @@ login_manager.login_view = 'login'  # Ruta a la que redirige cuando no está aut
 # --------------------------------------------------
 usuarios = {}
 
-# Creamos usuarios de ejemplo para simular el sistema de autenticación.
-est1 = Estudiante("Alexander", "Erazo", "ale@gmail.com", "0000", "A1", "ISF")
-est2 = Estudiante("Luis", "Cueva", "luis@gmail.com", "0000", "A2", "Enfermería")
-est3 = Estudiante("Felix", "Muñoz", "felix@gmail.com", "0000", "A3", "Tecnologías de la Información")
-doc1 = Docente("Jimmy", "Parrales", "jimmy@gmail.com", "0000", "POO")
-admin1 = Administrador("Alex", "Rivera", "alex@gmail.com", "0000")
-coord1 = Coordinador("Pepe", "Figueroa", "pepe@gmail.com", "0000")
+# Creamos usuarios de ejemplo usando la Factory para seguir el patrón Factory Method
+est1 = UsuarioFactory.crear_usuario(
+    tipo="estudiante",
+    nombre="Alexander",
+    apellido="Erazo",
+    email="ale@gmail.com",
+    password="0000",
+    matricula="A1",
+    carrera="ISF"
+)
+
+est2 = UsuarioFactory.crear_usuario(
+    tipo="estudiante",
+    nombre="Luis",
+    apellido="Cueva",
+    email="luis@gmail.com",
+    password="0000",
+    matricula="A2",
+    carrera="Enfermería"
+)
+
+est3 = UsuarioFactory.crear_usuario(
+    tipo="estudiante",
+    nombre="Felix",
+    apellido="Muñoz",
+    email="felix@gmail.com",
+    password="0000",
+    matricula="A3",
+    carrera="Tecnologías de la Información"
+)
+
+doc1 = UsuarioFactory.crear_usuario(
+    tipo="docente",
+    nombre="Jimmy",
+    apellido="Parrales",
+    email="jimmy@gmail.com",
+    password="0000",
+    asignatura="POO"
+)
+
+admin1 = UsuarioFactory.crear_usuario(
+    tipo="admin",
+    nombre="Alex",
+    apellido="Rivera",
+    email="alex@gmail.com",
+    password="0000"
+)
+
+coord1 = UsuarioFactory.crear_usuario(
+    tipo="coordinador",
+    nombre="Pepe",
+    apellido="Figueroa",
+    email="pepe@gmail.com",
+    password="0000"
+)
 
 # Guardamos los usuarios en el diccionario usando el email como clave.
 for u in [est1, est2, est3, doc1, admin1, coord1]:
