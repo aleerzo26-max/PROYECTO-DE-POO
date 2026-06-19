@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models.usuario_factory import UsuarioFactory
-from models.tarea import Tarea
+from models.tarea import Tarea 
 from models.curso import Curso, Horario, Modalidad
 import os
 from functools import wraps
