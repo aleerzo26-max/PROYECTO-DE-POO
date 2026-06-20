@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Registrar Nota</h2>
+    <form method="post">
+        <div class="form-group">
+            <label class="muted">Matrícula</label>
+            <div class="input">
+                <select name="matricula" style="background:transparent;border:0;outline:none">
+                    {% for e in estudiantes %}
+                    <option value="{{ e.matricula }}">{{ e.matricula }} - {{ e.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="muted">Asignatura</label>
+            <div class="input"><input type="text" name="asignatura" required></div>
+        </div>
+
+        <div class="form-group">
+            <label class="muted">Nota</label>
+            <div class="input"><input type="number" step="0.1" name="nota" required></div>
+        </div>
+
+        <div style="text-align:right">
+            <button class="btn-primary" type="submit">Registrar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

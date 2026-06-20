@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Entregas de estudiantes</h2>
+    <table class="table">
+        <thead>
+            <tr><th>Tarea</th><th>Estudiante</th><th>Archivo</th><th>Fecha</th></tr>
+        </thead>
+        <tbody>
+            {% for entrega in entregas %}
+            <tr>
+                <td>{{ entrega.tarea_titulo }}</td>
+                <td>{{ entrega.estudiante_nombre }}</td>
+                <td>{{ entrega.archivo }}</td>
+                <td>{{ entrega.fecha }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4">No hay entregas aún.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
