@@ -21,9 +21,9 @@ Se ha implementado el **primer módulo web completo** del sistema UniLevel utili
 ### Core de la Aplicación
 | Archivo | Líneas | Descripción |
 |---------|--------|-------------|
-| `app.py` | ~290 | Aplicación Flask con rutas y lógica |
-| `config.py` | ~75 | Configuración de la aplicación |
-| `init_db.py` | ~120 | Script para inicializar datos de prueba |
+| `app.py` | ~290 | Aplicación Flask con rutas y lógica. |
+| `config.py` | ~75 | Configuración de la aplicación. |
+| `init_db.py` | ~120 | Script para inicializar datos de prueba. |
 
 ### Templates HTML
 | Archivo | Componente |
