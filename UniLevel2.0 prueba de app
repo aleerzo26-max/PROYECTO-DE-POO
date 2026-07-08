@@ -1,0 +1,229 @@
+"""
+app.py - Punto de entrada de la aplicación Flask UniLevel.
+
+Aquí se inicializa Flask, se configuran las rutas y se orquestan los componentes del sistema.
+"""
+
+import uuid
+from datetime import datetime
+from functools import wraps
+from pathlib import Path
+
+from flask import Flask, Response, flash, redirect, render_template, request, session, url_for, send_from_directory
+
+import config
+from facades.sistema_nivelacion_facade import SistemaNivelacionFacade
+from repositories.usuario_repository import UsuarioRepository
+from repositories.matricula_repository import MatriculaRepository
+from repositories.paralelo_repository import ParaleloRepository
+from repositories.periodo_academico_repository import PeriodoAcademicoRepository
+from repositories.notificacion_repository import NotificacionRepository
+from repositories.horario_repository import HorarioRepository
+from repositories.tarea_repository import TareaRepository
+from repositories.entrega_repository import EntregaRepository
+from repositories.calificacion_repository import CalificacionRepository
+from repositories.asistencia_repository import AsistenciaRepository
+from repositories.reporte_repository import ReporteRepository
+from services.autenticacion_service import AutenticacionService
+from services.usuario_service import UsuarioService
+from services.notificacion_service import NotificacionService
+from services.matricula_service import MatriculaService
+from services.horario_service import HorarioService
+from services.paralelo_service import ParaleloService
+from services.periodo_academico_service import PeriodoAcademicoService
+from services.tarea_service import TareaService
+from services.entrega_service import EntregaService
+from services.calificacion_service import CalificacionService
+from services.asistencia_service import AsistenciaService
+from services.reporte_service import ReporteService
+from services.importador_service import ImportadorService
+from utils.password_generator import PasswordGenerator
+from utils.email_sender import EmailSender
+from werkzeug.utils import secure_filename
+from repositories.carrera_repository import CarreraRepository
+from repositories.malla_repository import MallaRepository
+from repositories.asignatura_repository import AsignaturaRepository
+from repositories.curso_repository import CursoRepository
+from services.carrera_service import CarreraService
+from services.malla_service import MallaService
+from services.asignatura_service import AsignaturaService
+from services.curso_service import CursoService
+
+
+def crear_app(config_name="development"):
+    """Factory function para crear la aplicación Flask."""
+
+    app = Flask(__name__)
+    config_obj = config.get_config(config_name)
+    app.config.from_object(config_obj)
+
+    # Inicializar componentes
+    inicializar_componentes(app)
+
+    # Registrar rutas
+    registrar_rutas(app)
+
+    return app
+
+
+def inicializar_componentes(app):
+    """Inicializa todos los componentes del sistema en el contexto de la app."""
+
+    # Repositorios
+    usuario_repo = UsuarioRepository(app.config["JSON_USUARIOS"])
+    matricula_repo = MatriculaRepository(app.config["JSON_MATRICULAS"])
+    paralelo_repo = ParaleloRepository(app.config["JSON_PARALELOS"])
+    periodo_repo = PeriodoAcademicoRepository(app.config["JSON_PERIODOS"])
+    notificacion_repo = NotificacionRepository(app.config["JSON_NOTIFICACIONES"])
+    horario_repo = HorarioRepository(app.config["JSON_HORARIOS"])
+
+    # Servicios
+    password_gen = PasswordGenerator()
+    email_sender = EmailSender()
+    notificacion_service = NotificacionService(notificacion_repo)
+    horario_service = HorarioService(horario_repo)
+    paralelo_service = ParaleloService(paralelo_repo, matricula_repo)
+    periodo_service = PeriodoAcademicoService(periodo_repo)
+
+    tarea_repo = TareaRepository(app.config["JSON_TAREAS"])
+    entrega_repo = EntregaRepository(app.config["JSON_ENTREGAS"])
+    calificacion_repo = CalificacionRepository(app.config["JSON_CALIFICACIONES"])
+    asistencia_repo = AsistenciaRepository(app.config["JSON_ASISTENCIAS"])
+    reporte_repo = ReporteRepository(app.config["JSON_REPORTES"])
+
+    autenticacion_service = AutenticacionService(usuario_repo)
+    usuario_service = UsuarioService(usuario_repo, notificacion_service, password_gen, email_sender)
+    matricula_service = MatriculaService(
+        matricula_repo,
+        paralelo_repo,
+        horario_service,
+        notificacion_service,
+        periodo_service,
+    )
+    # Conectar el servicio de matrículas al servicio de usuarios para limpieza de referencias
+    usuario_service._matricula_service = matricula_service
+    tarea_service = TareaService(tarea_repo, paralelo_repo, matricula_repo, notificacion_service)
+    entrega_service = EntregaService(entrega_repo, tarea_repo, matricula_repo, notificacion_service)
+    calificacion_service = CalificacionService(calificacion_repo, paralelo_repo, matricula_repo, notificacion_service)
+    asistencia_service = AsistenciaService(asistencia_repo, paralelo_repo, matricula_repo, notificacion_service)
+    reporte_service = ReporteService(
+        reporte_repo,
+        usuario_repo,
+        matricula_repo,
+        calificacion_repo,
+        asistencia_repo,
+        paralelo_repo,
+        periodo_repo,
+        str(app.config["REPORTES_FOLDER"]),
+    )
+
+    # Pasar horario_service a la fachada
+    horario_service = HorarioService(horario_repo)
+
+    # Servicio de importación
+    importador_service = ImportadorService(
+        usuario_repo,
+        notificacion_repo,
+        None,  # Se pasará la fachada después de crearla
+    )
+
+    # Fachada
+    fachada = SistemaNivelacionFacade(
+        autenticacion_service,
+        usuario_service,
+        matricula_service,
+        paralelo_service,
+        periodo_service,
+        notificacion_service,
+        tarea_service,
+        entrega_service,
+        calificacion_service,
+        asistencia_service,
+        horario_service,
+        reporte_service,
+        importador_service,
+    )
+
+    # Registrar servicios del coordinador en la fachada
+    # Repos/servicios para coordinador
+    carrera_repo = CarreraRepository(app.config["JSON_CARRERAS"]) if "JSON_CARRERAS" in app.config else None
+    malla_repo = MallaRepository(app.config["JSON_MALLAS"]) if "JSON_MALLAS" in app.config else None
+    asignatura_repo = AsignaturaRepository(app.config["JSON_ASIGNATURAS"]) if "JSON_ASIGNATURAS" in app.config else None
+    curso_repo = CursoRepository(app.config["JSON_CURSOS"]) if "JSON_CURSOS" in app.config else None
+
+    if carrera_repo is not None:
+        fachada._carrera_service = CarreraService(carrera_repo)
+    if malla_repo is not None:
+        fachada._malla_service = MallaService(malla_repo)
+    if asignatura_repo is not None:
+        fachada._asignatura_service = AsignaturaService(asignatura_repo)
+    if curso_repo is not None:
+        curso_service = CursoService(curso_repo)
+        fachada._curso_service = curso_service
+        paralelo_service._curso_service = curso_service
+
+    # Actualizar referencia de fachada en el importador
+    importador_service._fachada = fachada
+
+    # Exponer fachada y servicios en el contexto de la app
+    app.fachada = fachada
+    app.usuario_service = usuario_service
+    app.matricula_service = matricula_service
+    app.paralelo_service = paralelo_service
+    app.horario_service = horario_service
+
+    # Almacenar en contexto de la app
+    app.fachada = fachada
+
+
+def registrar_rutas(app):
+    """Registra todas las rutas de la aplicación."""
+
+    # ===================== RUTAS PÚBLICAS =====================
+
+    @app.route("/", methods=["GET"])
+    def inicio():
+        """Ruta raíz - redirige a login o dashboard."""
+        if "usuario_id" in session:
+            return redirect(url_for(f"dashboard_{session['rol']}"))
+        return redirect(url_for("login"))
+
+    @app.route("/login", methods=["GET", "POST"])
+    def login():
+        """Ruta de login."""
+        if request.method == "POST":
+            correo = request.form.get("correo", "").strip()
+            password = request.form.get("password", "").strip()
+
+            if not correo or not password:
+                flash("Correo y contraseña son requeridos.", "error")
+                return redirect(url_for("login"))
+
+            try:
+                usuario = app.fachada.iniciar_sesion(correo, password)
+
+                # Almacenar en sesión
+                session["usuario_id"] = usuario["id"]
+                session["nombre"] = usuario["nombre"]
+                session["apellido"] = usuario["apellido"]
+                session["rol"] = usuario["rol"]
+                session["email"] = usuario["email"]
+                session["primer_inicio"] = usuario.get("primer_inicio", False)
+                session.permanent = True
+
+                # Verificar si debe cambiar contraseña
+                if usuario.get("primer_inicio", False):
+                    flash("Debe cambiar su contraseña en el primer inicio.", "warning")
+                    return redirect(url_for("cambiar_password"))
+
+                flash(f"Bienvenido {usuario['nombre']}!", "success")
+                return redirect(url_for(f"dashboard_{usuario['rol']}"))
+
+            except RuntimeError as e:
+                flash(str(e), "error")
+            except ValueError as e:
+                flash(str(e), "error")
+            except Exception as e:
+                flash(f"Error inesperado: {str(e)}", "error")
+
+            return redirect(url_for("login"))
