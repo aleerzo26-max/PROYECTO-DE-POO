@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Detalle de Calificación - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-eye"></i> Detalle de Calificación</h1>
+            <p class="text-muted">Revisa los datos registrados para esta calificación.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Estudiante</dt>
+                        <dd class="col-sm-8">{{ calificacion.estudiante_nombre }}</dd>
+
+                        <dt class="col-sm-4">Paralelo</dt>
+                        <dd class="col-sm-8">{{ calificacion.paralelo_nombre }}</dd>
+
+                        <dt class="col-sm-4">Evaluación</dt>
+                        <dd class="col-sm-8">{{ calificacion.evaluacion }}</dd>
+
+                        <dt class="col-sm-4">Nota</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-{{ 'success' if calificacion.nota >= 7 else 'warning' if calificacion.nota >= 4 else 'danger' }}">
+                                {{ calificacion.nota }}
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Estado</dt>
+                        <dd class="col-sm-8">{{ calificacion.estado }}</dd>
+
+                        <dt class="col-sm-4">Registrado</dt>
+                        <dd class="col-sm-8">{{ calificacion.fecha_registro }}</dd>
+
+                        <dt class="col-sm-4">Última actualización</dt>
+                        <dd class="col-sm-8">{{ calificacion.fecha_actualizacion }}</dd>
+
+                        <dt class="col-sm-4">Comentario</dt>
+                        <dd class="col-sm-8">{{ calificacion.comentario or 'Sin comentario' }}</dd>
+                    </dl>
+                    <a href="{{ url_for('editar_calificacion_docente', calificacion_id=calificacion.id) }}" class="btn btn-primary">Editar calificación</a>
+                    <a href="{{ url_for('listar_calificaciones_docente') }}" class="btn btn-secondary">Volver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

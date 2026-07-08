@@ -1,0 +1,60 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Editar Paralelo{% endblock %}
+{% block page_subtitle %}Actualice los datos del paralelo seleccionado.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_paralelos_admin') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Paralelos
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label required">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ paralelo.nombre }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required">Curso</label>
+                    <select name="curso_id" class="form-select" required>
+                        <option value="">Seleccione un curso</option>
+                        {% for curso in cursos %}
+                        <option value="{{ curso.id }}" {% if paralelo.curso_id == curso.id %}selected{% endif %}>
+                            {{ curso.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label required">Capacidad máxima</label>
+                    <input type="number" name="capacidad_maxima" class="form-control" min="1" value="{{ paralelo.capacidad_maxima }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Docente asignado</label>
+                    <select name="docente_id" class="form-select">
+                        <option value="">Sin docente</option>
+                        {% for docente in docentes %}
+                        <option value="{{ docente.id }}" {% if paralelo.docente_id == docente.id %}selected{% endif %}>
+                            {{ docente.nombre }} {{ docente.apellido }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Descripción</label>
+                    <textarea name="descripcion" class="form-control" rows="3">{{ paralelo.descripcion }}</textarea>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i> Actualizar Paralelo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

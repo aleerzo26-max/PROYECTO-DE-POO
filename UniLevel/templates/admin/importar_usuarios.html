@@ -1,0 +1,118 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Importar Usuarios{% endblock %}
+{% block page_subtitle %}Carga usuarios en lote desde archivos CSV o XLSX.{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Cargar archivo de usuarios</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('procesar_importacion_usuarios') }}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="archivo" class="form-label">Selecciona archivo CSV o XLSX</label>
+                        <input type="file" class="form-control" id="archivo" name="archivo" accept=".csv,.xlsx" required>
+                        <small class="text-muted">Formatos soportados: CSV, XLSX | Tamaño máximo: 10MB</small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Formato requerido:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Columnas requeridas: nombre, apellido, documento, email, rol</li>
+                            <li>Columna opcional: telefono</li>
+                            <li>Roles válidos: estudiante, docente, coordinador, administrador</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-arrow-up me-1"></i> Importar usuarios
+                        </button>
+                        <a href="{{ url_for('descargar_template_usuarios', formato='csv') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-file-csv me-1"></i> Descargar template CSV
+                        </a>
+                        <a href="{{ url_for('descargar_template_usuarios', formato='xlsx') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-file-excel me-1"></i> Descargar template XLSX
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>Ayuda</h5>
+            </div>
+            <div class="card-body">
+                <h6 class="mb-3">Paso a paso:</h6>
+                <ol class="small">
+                    <li>Descarga el template CSV o XLSX</li>
+                    <li>Completa con datos de usuarios (mínimo 1)</li>
+                    <li>Guarda el archivo con datos</li>
+                    <li>Sube el archivo aquí</li>
+                    <li>Revisa los resultados y errores</li>
+                </ol>
+
+                <hr>
+
+                <h6 class="mb-2"><strong>Roles disponibles:</strong></h6>
+                <ul class="small mb-0">
+                    <li><span class="badge bg-primary">estudiante</span> - Estudiante de cursos</li>
+                    <li><span class="badge bg-warning">docente</span> - Profesor/Docente</li>
+                    <li><span class="badge bg-success">coordinador</span> - Coordinador académico</li>
+                    <li><span class="badge bg-danger">administrador</span> - Administrador del sistema</li>
+                </ul>
+
+                <hr>
+
+                <h6 class="mb-2"><strong>Ejemplo de fila:</strong></h6>
+                <code class="small d-block bg-light p-2 rounded">Juan,Pérez,1234567890,juan@unilevel.edu,5551234567,estudiante</code>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Validaciones</h5>
+            </div>
+            <div class="card-body small">
+                <p class="mb-2">El sistema validará:</p>
+                <ul class="mb-0">
+                    <li>✓ Campos requeridos no vacíos</li>
+                    <li>✓ Email válido (contiene @)</li>
+                    <li>✓ Documento único</li>
+                    <li>✓ Rol válido</li>
+                    <li>✓ Datos duplicados</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

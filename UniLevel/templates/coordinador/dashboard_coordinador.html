@@ -1,0 +1,207 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard Coordinador - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold">
+                <i class="fas fa-user-tie"></i> Dashboard Coordinador
+            </h1>
+            <p class="text-muted">
+                Bienvenido, <strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Estadísticas Coordinador -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-users" style="font-size: 2.5rem; color: #4e73df;"></i>
+                <h5>Total de Estudiantes</h5>
+                <h2>{{ total_estudiantes }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-book" style="font-size: 2.5rem; color: #1cc88a;"></i>
+                <h5>Total de Cursos</h5>
+                <h2>{{ total_cursos }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-chalkboard-user" style="font-size: 2.5rem; color: #f6c23e;"></i>
+                <h5>Total de Docentes</h5>
+                <h2>{{ total_docentes }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-percentage" style="font-size: 2.5rem; color: #36b9cc;"></i>
+                <h5>Tasa de Aprobación</h5>
+                <h2>{{ tasa_aprobacion }}%</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel de Control -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog"></i> Panel de Control</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="{{ url_for('crear_curso') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-book-plus"></i> Crear Curso
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_cursos') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-list"></i> Ver Cursos
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-users"></i> Gestionar Matrículas
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_carreras') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-graduation-cap"></i> Ver Carreras
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_mallas') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-book"></i> Ver Mallas
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_asignaturas') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-book-open"></i> Ver Asignaturas
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_paralelos_coordinador') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-layer-group"></i> Ver Paralelos
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_reportes_admin') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-chart-bar"></i> Ver Reportes
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_paralelos_coordinador') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-calendar-alt"></i> Cronograma
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_notificaciones') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-bell"></i> Notificaciones
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cursos Activos -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-book"></i> Cursos Activos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Curso</th>
+                                    <th>Docente</th>
+                                    <th>Estudiantes</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if cursos_activos %}
+                                    {% for curso in cursos_activos %}
+                                        <tr>
+                                            <td><strong>{{ curso.nombre }}</strong></td>
+                                            <td>{{ curso.asignatura or 'N/D' }}</td>
+                                            <td><span class="badge bg-info">{{ curso.inscritos or 0 }}/{{ curso.capacidad_maxima or 0 }}</span></td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if curso.estado == 'Disponible' else 'warning' if curso.estado == 'Sin Cupos' else 'secondary' }}">
+                                                    {{ curso.estado }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay cursos activos.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perfil y Tareas Pendientes -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-circle"></i> Mi Perfil</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle" alt="Avatar">
+                    </div>
+                    <h5 class="fw-bold">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+                    <p class="text-muted mb-2">{{ usuario.email }}</p>
+                    <span class="badge bg-info badge-role">
+                        <i class="fas fa-clipboard"></i> {{ usuario.rol.capitalize() }}
+                    </span>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <a href="#" class="btn btn-sm btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary w-100">
+                            <i class="fas fa-key"></i> Cambiar Contraseña
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tareas Pendientes -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Pendientes</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-3 pb-3 border-bottom">
+                            <h6 class="mb-1"><i class="fas fa-exclamation-circle text-danger"></i> Aprobar matrículas</h6>
+                            <small class="text-muted">15 solicitudes pendientes</small>
+                        </li>
+                        <li class="mb-3 pb-3 border-bottom">
+                            <h6 class="mb-1"><i class="fas fa-calendar text-warning"></i> Cerrar período</h6>
+                            <small class="text-muted">En 5 días</small>
+                        </li>
+                        <li>
+                            <h6 class="mb-1"><i class="fas fa-file text-info"></i> Generar reportes</h6>
+                            <small class="text-muted">Mensual vence el 30</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

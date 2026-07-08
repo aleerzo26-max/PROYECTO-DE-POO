@@ -1,0 +1,45 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Editar Asistencia - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-edit"></i> Editar Asistencia</h1>
+            <p class="text-muted">Ajusta el estado de asistencia y comentarios según corresponda.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" name="fecha" class="form-control" value="{{ asistencia.fecha }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <select name="asistio" class="form-select" required>
+                                <option value="true" {% if asistencia.asistio %}selected{% endif %}>Presente</option>
+                                <option value="false" {% if not asistencia.asistio %}selected{% endif %}>Ausente</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Comentario</label>
+                            <textarea name="comentario" class="form-control" rows="3">{{ asistencia.comentario }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <a href="{{ url_for('detalle_asistencia_docente', asistencia_id=asistencia.id) }}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

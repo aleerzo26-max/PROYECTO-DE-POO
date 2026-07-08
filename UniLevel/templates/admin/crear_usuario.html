@@ -1,0 +1,99 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Crear Usuario{% endblock %}
+{% block page_subtitle %}Registra un nuevo usuario y configura su rol en el sistema.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_usuarios') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Usuarios
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <form method="POST" class="row g-4 needs-validation" novalidate>
+            <div class="col-12">
+                <div class="pb-3 border-bottom mb-4">
+                    <h4 class="mb-1">Información básica</h4>
+                    <p class="text-muted mb-0">Complete los datos del nuevo usuario. Los campos marcados con * son obligatorios.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Nombre</label>
+                <input type="text" class="form-control" name="nombre" placeholder="Ej. María" required>
+                <div class="invalid-feedback">Ingresa el nombre del usuario.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Apellido</label>
+                <input type="text" class="form-control" name="apellido" placeholder="Ej. González" required>
+                <div class="invalid-feedback">Ingresa el apellido del usuario.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Documento</label>
+                <input type="text" class="form-control" name="documento" placeholder="Ej. 1234567890" required>
+                <div class="invalid-feedback">Ingresa el documento del usuario.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Correo electrónico</label>
+                <input type="email" class="form-control" name="email" placeholder="usuario@unilevel.edu" required>
+                <div class="invalid-feedback">Ingresa un email válido.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Teléfono</label>
+                <input type="tel" class="form-control" name="telefono" placeholder="Ej. +593 999 123 456">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Rol</label>
+                <select class="form-select" name="rol" required>
+                    <option value="">Selecciona un rol</option>
+                    {% for rol in roles %}
+                    <option value="{{ rol }}">{{ rol.capitalize() }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Selecciona el rol del usuario.</div>
+            </div>
+
+            <div class="col-12">
+                <div class="p-4 rounded-4 bg-light border border-dashed">
+                    <h5 class="h6 mb-2">Resumen</h5>
+                    <p class="mb-0 text-muted">Se creará una contraseña temporal y el usuario recibirá una invitación para cambiarla en su primer acceso.</p>
+                </div>
+            </div>
+
+            <div class="col-12 d-flex flex-column flex-sm-row gap-2 justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i> Guardar Usuario
+                </button>
+                <a href="{{ url_for('listar_usuarios') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

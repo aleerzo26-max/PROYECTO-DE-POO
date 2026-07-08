@@ -1,0 +1,103 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Detalle de Matrícula{% endblock %}
+{% block page_subtitle %}Visualice la información completa de la matrícula y su estado actual.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Matrículas
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <div class="row gy-4">
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>Información del estudiante</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Nombre:</strong> {{ estudiante.nombre }} {{ estudiante.apellido }}</p>
+                        <p class="mb-2"><strong>Email:</strong> {{ estudiante.email }}</p>
+                        <p class="mb-2"><strong>Documento:</strong> {{ estudiante.documento }}</p>
+                        <p class="mb-0"><strong>Teléfono:</strong> {{ estudiante.telefono or 'No disponible' }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>Información de paralelo</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Paralelo:</strong> {{ paralelo.nombre }}</p>
+                        <p class="mb-2"><strong>Asignatura:</strong> {{ paralelo.asignatura }}</p>
+                        <p class="mb-2"><strong>Docente:</strong> {{ paralelo.docente_id or 'N/D' }}</p>
+                        <p class="mb-0"><strong>Capacidad:</strong> {{ paralelo.capacidad_maxima }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>Detalle de matrícula</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Fecha de matrícula:</strong> {{ matricula.fecha_matricula }}</p>
+                        <p class="mb-2"><strong>Periodo académico:</strong> {{ matricula.periodo_academico or 'No definido' }}</p>
+                        <p class="mb-2"><strong>Estado:</strong>
+                            {% if matricula.estado == 'matriculado' %}
+                                <span class="badge bg-success">Matriculado</span>
+                            {% elif matricula.estado == 'cancelado' %}
+                                <span class="badge bg-secondary">Cancelado</span>
+                            {% else %}
+                                <span class="badge bg-info">{{ matricula.estado|capitalize }}</span>
+                            {% endif %}
+                        </p>
+                        <p class="mb-0"><strong>ID Matrícula:</strong> {{ matricula.id }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <strong>Acciones</strong>
+                    </div>
+                    <div class="card-body">
+                        {% if matricula.estado == 'matriculado' %}
+                        <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                            <i class="fas fa-times me-2"></i> Cancelar Matrícula
+                        </button>
+                        {% else %}
+                        <span class="badge bg-secondary">No hay acciones disponibles</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="cancelModalLabel"><i class="fas fa-exclamation-circle me-2"></i>Confirmar cancelación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Desea cancelar la matrícula de <strong>{{ estudiante.nombre }} {{ estudiante.apellido }}</strong> en el paralelo <strong>{{ paralelo.nombre }}</strong>?</p>
+                <p class="text-muted small">Esta acción no puede revertirse desde la interfaz.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="POST" action="{{ url_for('cancelar_matricula_admin', matricula_id=matricula.id) }}">
+                    <button type="submit" class="btn btn-danger">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

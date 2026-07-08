@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Asignar Docente - Paralelo{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Asignar Docente al paralelo: {{ paralelo.nombre }}</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Docente</label>
+                            <select name="docente_id" class="form-select">
+                                <option value="">-- Sin docente --</option>
+                                {% for d in docentes %}
+                                <option value="{{ d.id }}" {% if paralelo.docente_id == d.id %}selected{% endif %}>{{ d.nombre }} {{ d.apellido }} ({{ d.email }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button class="btn btn-primary">Asignar</button>
+                        <a href="{{ url_for('listar_paralelos_coordinador') }}" class="btn btn-outline-secondary">Volver</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

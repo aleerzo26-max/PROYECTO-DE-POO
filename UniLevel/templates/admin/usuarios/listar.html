@@ -1,0 +1,172 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Gestión de Usuarios - UniLevel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .badge-activo { background-color: #28a745; }
+    .badge-inactivo { background-color: #dc3545; }
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+    .search-box { margin-bottom: 20px; }
+    .filter-section { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2>
+                <i class="fas fa-users"></i> Gestión de Usuarios
+                <span class="badge badge-info ml-2">{{ total }}</span>
+            </h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <a href="{{ url_for('crear_usuario_admin') }}" class="btn btn-primary mr-2">
+                <i class="fas fa-plus"></i> Crear Usuario
+            </a>
+            <a href="{{ url_for('importar_usuarios_admin') }}" class="btn btn-success">
+                <i class="fas fa-upload"></i> Importar Usuarios
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="filter-section">
+        <form method="GET" class="form-inline">
+            <div class="form-group mr-3">
+                <label for="buscar" class="mr-2">Buscar:</label>
+                <input type="text" class="form-control" id="buscar" name="buscar" 
+                       placeholder="Nombre, email, documento..." value="{{ buscar }}">
+            </div>
+
+            <div class="form-group mr-3">
+                <label for="rol" class="mr-2">Rol:</label>
+                <select class="form-control" id="rol" name="rol">
+                    <option value="">Todos los roles</option>
+                    {% for rol in roles %}
+                    <option value="{{ rol }}" {% if rol == rol_filtro %}selected{% endif %}>
+                        {{ rol.capitalize() }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group mr-3">
+                <label for="estado" class="mr-2">Estado:</label>
+                <select class="form-control" id="estado" name="estado">
+                    <option value="">Todos</option>
+                    <option value="activos" {% if estado_filtro == 'activos' %}selected{% endif %}>Activos</option>
+                    <option value="inactivos" {% if estado_filtro == 'inactivos' %}selected{% endif %}>Inactivos</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Filtrar
+            </button>
+        </form>
+    </div>
+
+    <!-- Tabla de Usuarios -->
+    {% if usuarios %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Documento</th>
+                    <th>Rol</th>
+                    <th>Teléfono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                    <td>
+                        <strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong>
+                    </td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.documento }}</td>
+                    <td>
+                        <span class="badge" style="background-color: 
+                            {% if usuario.rol == 'administrador' %}#6c63ff
+                            {% elif usuario.rol == 'docente' %}#ff6b6b
+                            {% elif usuario.rol == 'estudiante' %}#4ecdc4
+                            {% elif usuario.rol == 'coordinador' %}#ffa502
+                            {% endif %}; color: white;">
+                            {{ usuario.rol.capitalize() }}
+                        </span>
+                    </td>
+                    <td>{{ usuario.telefono or 'N/A' }}</td>
+                    <td>
+                        {% if usuario.get('eliminado', False) %}
+                            <span class="badge badge-danger">Eliminado</span>
+                        {% elif usuario.get('activo', True) %}
+                            <span class="badge badge-activo">Activo</span>
+                        {% else %}
+                            <span class="badge badge-inactivo">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('ver_usuario_admin', usuario_id=usuario.id) }}" 
+                           class="btn btn-sm btn-info" title="Ver">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ url_for('editar_usuario_admin', usuario_id=usuario.id) }}" 
+                           class="btn btn-sm btn-warning" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        {% if not usuario.get('eliminado', False) %}
+                            {% if usuario.get('activo', True) %}
+                            <form method="POST" action="{{ url_for('desactivar_usuario_admin', usuario_id=usuario.id) }}" 
+                                  style="display: inline;" onsubmit="return confirm('¿Desactivar usuario?')">
+                                <button type="submit" class="btn btn-sm btn-warning" title="Desactivar">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="{{ url_for('activar_usuario_admin', usuario_id=usuario.id) }}" 
+                                  style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-success" title="Activar">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+
+                            <form method="POST" action="{{ url_for('eliminar_usuario_admin', usuario_id=usuario.id) }}" 
+                                  style="display: inline;" onsubmit="return confirm('¿Eliminar usuario? Esta acción no se puede deshacer.')">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Eliminar">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle"></i> No hay usuarios que coincidan con los filtros.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Mejorar la interfaz
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar tooltips de Bootstrap
+        $('[data-toggle="tooltip"]').tooltip();
+        
+        // Confirmar acciones peligrosas
+        $('form[onsubmit*="confirm"]').on('submit', function(e) {
+            // El onsubmit ya maneja la confirmación
+        });
+    });
+</script>
+{% endblock %}

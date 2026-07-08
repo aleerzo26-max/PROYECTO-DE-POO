@@ -1,0 +1,24 @@
+# Dependencias del proyecto UniLevel
+# Sistema de Nivelación Académica
+
+# Framework Web
+Flask==2.3.3
+Flask-Session==0.5.0
+
+# Utilities
+python-dotenv==1.0.0
+
+# Development
+Werkzeug==2.3.7
+
+# Importación de archivos
+openpyxl==3.1.2
+
+# Testing (opcional)
+pytest==7.4.0
+pytest-cov==4.1.0
+
+# Linting (opcional)
+flake8==6.0.0
+black==23.7.0
+

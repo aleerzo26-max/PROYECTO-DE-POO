@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Mis Tareas - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-tasks"></i> Mis Tareas</h1>
+            <p class="text-muted">Lista de tareas publicadas por ti.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{{ url_for('crear_tarea_docente') }}" class="btn btn-primary mb-3">
+                <i class="fas fa-plus"></i> Nueva tarea
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Paralelo</th>
+                                    <th>Fecha límite</th>
+                                    <th>Entregas</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if tareas %}
+                                    {% for tarea in tareas %}
+                                        <tr>
+                                            <td>{{ tarea.titulo }}</td>
+                                            <td>{{ tarea.paralelo.nombre if tarea.paralelo else 'Sin paralelo' }}</td>
+                                            <td>{{ tarea.fecha_entrega }}</td>
+                                            <td>{{ tarea.entregas|length }}</td>
+                                            <td>
+                                                <a href="{{ url_for('ver_tarea_docente', tarea_id=tarea.id) }}" class="btn btn-sm btn-outline-primary">
+                                                    Ver
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No hay tareas creadas aún.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

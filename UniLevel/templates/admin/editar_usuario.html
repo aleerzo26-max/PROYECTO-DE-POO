@@ -1,0 +1,107 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Editar Usuario{% endblock %}
+{% block page_subtitle %}Actualiza la información de un usuario existente.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_usuarios') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Usuarios
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <form method="POST" class="row g-4 needs-validation" novalidate>
+            <div class="col-12">
+                <div class="pb-3 border-bottom mb-4">
+                    <h4 class="mb-1">Datos del usuario</h4>
+                    <p class="text-muted mb-0">Modifica los campos necesarios. El email y el documento sólo se pueden mostrar como lectura.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Nombre</label>
+                <input type="text" class="form-control" name="nombre" value="{{ usuario.nombre }}" required>
+                <div class="invalid-feedback">Ingresa el nombre del usuario.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Apellido</label>
+                <input type="text" class="form-control" name="apellido" value="{{ usuario.apellido }}" required>
+                <div class="invalid-feedback">Ingresa el apellido del usuario.</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Documento</label>
+                <input type="text" class="form-control" value="{{ usuario.documento }}" disabled>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" value="{{ usuario.email }}" disabled>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Teléfono</label>
+                <input type="tel" class="form-control" name="telefono" value="{{ usuario.telefono or '' }}" placeholder="Ej. +593 999 123 456">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label required">Rol</label>
+                <select class="form-select" name="rol" required>
+                    <option value="">Selecciona un rol</option>
+                    {% for rol in roles %}
+                    <option value="{{ rol }}" {% if rol == usuario.rol %}selected{% endif %}>{{ rol.capitalize() }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Selecciona el rol del usuario.</div>
+            </div>
+
+            <div class="col-12">
+                <div class="row gx-3">
+                    <div class="col-md-6">
+                        <div class="p-4 rounded-4 bg-light border border-dashed">
+                            <h6 class="mb-2">Estado</h6>
+                            <p class="mb-0 text-muted">Este usuario se encuentra actualmente <strong>{{ 'Activo' if usuario.get('activo', True) else 'Inactivo' }}</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4 rounded-4 bg-light border border-dashed">
+                            <h6 class="mb-2">Primer inicio</h6>
+                            <p class="mb-0 text-muted">El usuario {{ 'debe cambiar su contraseña' if usuario.get('primer_inicio', True) else 'ya ha cambiado su contraseña' }}.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 d-flex flex-column flex-sm-row gap-2 justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i> Guardar cambios
+                </button>
+                <a href="{{ url_for('ver_usuario_admin', usuario_id=usuario.id) }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-eye me-2"></i> Ver perfil
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Crear Usuario - UniLevel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+    .required::after { content: " *"; color: red; }
+    .form-group label { font-weight: 600; }
+    .info-box { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-user-plus"></i> Crear Nuevo Usuario</h2>
+            <p class="text-muted">Complete todos los campos para crear un nuevo usuario en el sistema.</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <i class="fas fa-info-circle"></i> <strong>Nota:</strong> Se generará una contraseña temporal automáticamente. 
+        El usuario deberá cambiarla en su primer inicio de sesión.
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="POST" class="needs-validation" novalidate>
+                <!-- Información Personal -->
+                <div class="form-section">
+                    <h5 class="mb-4">Información Personal</h5>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombre" class="required">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" 
+                                       placeholder="Ej: Juan" required>
+                                <small class="form-text text-muted">Nombre del usuario</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="apellido" class="required">Apellido</label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" 
+                                       placeholder="Ej: Pérez" required>
+                                <small class="form-text text-muted">Apellido del usuario</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="documento" class="required">Cédula/Documento</label>
+                                <input type="text" class="form-control" id="documento" name="documento" 
+                                       placeholder="Ej: 1234567890" required>
+                                <small class="form-text text-muted">Número único de cédula (no puede repetirse)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email" class="required">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       placeholder="Ej: usuario@unilevel.edu" required>
+                                <small class="form-text text-muted">Email único (será su nombre de usuario)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" 
+                                       placeholder="Ej: +57 312 1234567">
+                                <small class="form-text text-muted">Número de contacto (opcional)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="rol" class="required">Rol</label>
+                                <select class="form-control" id="rol" name="rol" required>
+                                    <option value="">-- Seleccionar rol --</option>
+                                    {% for rol in roles %}
+                                    <option value="{{ rol }}">
+                                        {% if rol == 'administrador' %}
+                                            <i class="fas fa-crown"></i> Administrador
+                                        {% elif rol == 'docente' %}
+                                            <i class="fas fa-chalkboard-user"></i> Docente
+                                        {% elif rol == 'estudiante' %}
+                                            <i class="fas fa-book"></i> Estudiante
+                                        {% elif rol == 'coordinador' %}
+                                            <i class="fas fa-layer-group"></i> Coordinador
+                                        {% endif %}
+                                        {{ rol.capitalize() }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <small class="form-text text-muted">Rol del usuario en el sistema</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descripción de Roles -->
+                <div class="form-section">
+                    <h5 class="mb-3">Descripción de Roles</h5>
+                    <ul class="list-unstyled">
+                        <li><strong style="color: #6c63ff;">👑 Administrador:</strong> Acceso completo al sistema, gestión de usuarios.</li>
+                        <li><strong style="color: #ff6b6b;">👨‍🏫 Docente:</strong> Crear tareas, calificar estudiantes, ver calificaciones.</li>
+                        <li><strong style="color: #4ecdc4;">📚 Estudiante:</strong> Ver tareas, entregar trabajos, ver calificaciones.</li>
+                        <li><strong style="color: #ffa502;">🎓 Coordinador:</strong> Gestionar cursos y matrículas de estudiantes.</li>
+                    </ul>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Crear Usuario
+                    </button>
+                    <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary btn-lg ml-2">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Panel de Ayuda -->
+        <div class="col-md-4">
+            <div class="card" style="position: sticky; top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-lightbulb"></i> Consejos
+                </div>
+                <div class="card-body">
+                    <h6>¿Qué sucede después de crear un usuario?</h6>
+                    <ul class="small">
+                        <li>✅ Se genera contraseña temporal automáticamente</li>
+                        <li>✅ Se envía notificación de bienvenida</li>
+                        <li>✅ Se crea credencial automáticamente</li>
+                        <li>✅ primer_inicio = True</li>
+                        <li>✅ activo = True</li>
+                    </ul>
+
+                    <hr>
+
+                    <h6>Validaciones</h6>
+                    <ul class="small">
+                        <li>🔒 Cédula única</li>
+                        <li>🔒 Email único</li>
+                        <li>🔒 Campos requeridos</li>
+                    </ul>
+
+                    <hr>
+
+                    <h6>Campos Requeridos</h6>
+                    <p class="small text-danger">Todos los campos marcados con <span class="required"></span> son obligatorios.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Validación de formulario
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    // Actualizar descripción según rol seleccionado
+    document.getElementById('rol').addEventListener('change', function() {
+        const rol = this.value;
+        // Aquí se podría actualizar dinámicamente la descripción
+    });
+</script>
+{% endblock %}

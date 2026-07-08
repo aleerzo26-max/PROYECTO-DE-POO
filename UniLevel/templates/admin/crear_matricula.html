@@ -1,0 +1,76 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Registrar Matrícula{% endblock %}
+{% block page_subtitle %}Complete el proceso de matriculación paso a paso para registrar a un estudiante en un paralelo.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Matrículas
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <span class="badge bg-primary mb-2">Paso 1 de 3</span>
+                        <h5 class="mb-1">Seleccionar estudiante</h5>
+                        <p class="text-muted small mb-0">Elija el alumno que se matriculará.</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-info">Matrículas</span>
+                    </div>
+                </div>
+                <form method="POST">
+                    <div class="mb-4">
+                        <label class="form-label required">Estudiante</label>
+                        <select class="form-select" name="estudiante_id" required>
+                            <option value="">Seleccione un estudiante</option>
+                            {% for estudiante in estudiantes %}
+                            <option value="{{ estudiante.id }}">{{ estudiante.nombre }} {{ estudiante.apellido }} - {{ estudiante.email }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label required">Paralelo</label>
+                        <select class="form-select" name="paralelo_id" required>
+                            <option value="">Seleccione un paralelo</option>
+                            {% for paralelo in paralelos %}
+                            <option value="{{ paralelo.id }}">{{ paralelo.nombre }} - {{ paralelo.asignatura }} (Capacidad {{ paralelo.capacidad_maxima }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Periodo académico</label>
+                        <select class="form-select" name="periodo_academico">
+                            <option value="">Seleccionar periodo</option>
+                            {% for periodo in periodos %}
+                            <option value="{{ periodo.nombre }}">{{ periodo.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">Si no selecciona un periodo, se usará el periodo predeterminado.</div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-save me-2"></i> Confirmar matriculación
+                            </button>
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-ban me-2"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

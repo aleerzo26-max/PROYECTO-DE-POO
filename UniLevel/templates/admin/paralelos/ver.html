@@ -1,0 +1,52 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Detalle de Paralelo{% endblock %}
+{% block page_subtitle %}Revise información, cupos y estudiantes inscritos.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_paralelos_admin') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Paralelos
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <h5 class="mb-3">Resumen del Paralelo</h5>
+                <p><strong>Nombre:</strong> {{ paralelo.nombre }}</p>
+                <p><strong>Asignatura:</strong> {{ paralelo.asignatura }}</p>
+                <p><strong>Docente:</strong> {{ docente.nombre if docente else 'N/D' }}</p>
+                <p><strong>Capacidad máxima:</strong> {{ paralelo.capacidad_maxima }}</p>
+                <p><strong>Inscritos:</strong> {{ paralelo.inscritos }}</p>
+                <p><strong>Cupos disponibles:</strong> {{ cupos_disponibles }}</p>
+                <p><strong>Estado:</strong>
+                    <span class="badge {% if paralelo.estado == 'Disponible' %}bg-success{% else %}bg-danger{% endif %}">
+                        {{ paralelo.estado }}
+                    </span>
+                </p>
+                <p><strong>Descripción:</strong> {{ paralelo.descripcion or 'Sin descripción' }}</p>
+            </div>
+            <div class="col-lg-6">
+                <h5 class="mb-3">Estudiantes Matriculados</h5>
+                {% if estudiantes %}
+                <ul class="list-group">
+                    {% for item in estudiantes %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ item.estudiante.nombre }} {{ item.estudiante.apellido }}</strong>
+                            <div class="small text-muted">{{ item.estudiante.email }}</div>
+                        </div>
+                        <span class="badge bg-secondary">{{ item.matricula.estado }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No hay estudiantes matriculados en este paralelo.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

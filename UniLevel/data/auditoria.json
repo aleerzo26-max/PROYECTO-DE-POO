@@ -1,0 +1,21 @@
+[
+    {
+        "fecha": "2026-06-29T18:24:39.423895",
+        "evento": "usuario_creado",
+        "usuario": "43cf5761-3d31-4b52-bc98-a5aabbcc5e71",
+        "detalle": "Nuevo usuario creado: Alex R."
+    },
+    {
+        "fecha": "2026-06-29T18:28:39.448196",
+        "evento": "usuario_creado",
+        "usuario": "5cc1a158-4019-439e-8ea2-66c226488a9c",
+        "detalle": "Nuevo usuario creado: Pedro R."
+    },
+    {
+        "fecha": "2026-07-06T04:51:15.528708",
+        "evento": "usuario_creado",
+        "usuario": "usuario-demo",
+        "descripcion": "Nuevo usuario creado: Administrador UniLevel.",
+        "detalle": "Nuevo usuario creado: Administrador UniLevel."
+    }
+]

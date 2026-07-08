@@ -1,0 +1,57 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Registrar Calificación - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-plus-circle"></i> Registrar Calificación</h1>
+            <p class="text-muted">Ingrese la calificación del estudiante para la evaluación seleccionada.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Estudiante</label>
+                            <select name="estudiante_id" class="form-select" required>
+                                <option value="">Selecciona un estudiante</option>
+                                {% for estudiante in estudiantes %}
+                                    <option value="{{ estudiante.id }}">{{ estudiante.nombre }} {{ estudiante.apellido }} - {{ estudiante.paralelo_nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Paralelo</label>
+                            <select name="paralelo_id" class="form-select" required>
+                                <option value="">Selecciona un paralelo</option>
+                                {% for paralelo in paralelos %}
+                                    <option value="{{ paralelo.id }}">{{ paralelo.nombre }} - {{ paralelo.asignatura }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Evaluación</label>
+                            <input type="text" name="evaluacion" class="form-control" placeholder="Ej. Parcial 1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nota</label>
+                            <input type="number" step="0.1" min="0" max="10" name="nota" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comentario</label>
+                            <textarea name="comentario" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrar calificación</button>
+                        <a href="{{ url_for('listar_calificaciones_docente') }}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

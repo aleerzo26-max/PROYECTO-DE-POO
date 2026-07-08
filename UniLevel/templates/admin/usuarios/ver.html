@@ -1,0 +1,224 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Ver Usuario - UniLevel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .info-card { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #4e73df; }
+    .info-label { font-weight: 600; color: #666; font-size: 0.9rem; text-transform: uppercase; }
+    .info-value { font-size: 1.1rem; color: #333; margin-bottom: 15px; }
+    .badge-role { padding: 8px 12px; font-size: 0.9rem; }
+    .avatar-section { text-align: center; margin-bottom: 30px; }
+    .user-avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; display: flex; align-items: center; justify-content: center; font-size: 48px; margin: 0 auto; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-user-circle"></i> Detalles del Usuario</h2>
+            <p class="text-muted">Información completa del usuario en el sistema.</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary mr-2">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <a href="{{ url_for('editar_usuario_admin', usuario_id=usuario.id) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel Principal -->
+        <div class="col-md-8">
+            <!-- Avatar y Nombre -->
+            <div class="avatar-section">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="mt-3">{{ usuario.nombre }} {{ usuario.apellido }}</h3>
+                <span class="badge badge-role" style="background-color: 
+                    {% if usuario.rol == 'administrador' %}#6c63ff
+                    {% elif usuario.rol == 'docente' %}#ff6b6b
+                    {% elif usuario.rol == 'estudiante' %}#4ecdc4
+                    {% elif usuario.rol == 'coordinador' %}#ffa502
+                    {% endif %}; color: white;">
+                    {{ usuario.rol.upper() }}
+                </span>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-address-card"></i> Información de Contacto</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="info-label">Email</p>
+                        <p class="info-value">
+                            <a href="mailto:{{ usuario.email }}">{{ usuario.email }}</a>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="info-label">Teléfono</p>
+                        <p class="info-value">{{ usuario.telefono or 'No especificado' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Documento -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-id-card"></i> Identificación</h5>
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="info-label">Cédula/Documento</p>
+                        <p class="info-value">{{ usuario.documento }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Cuenta -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-lock"></i> Información de Cuenta</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="info-label">ID de Usuario</p>
+                        <p class="info-value">
+                            <code style="background: #e9ecef; padding: 5px 10px; border-radius: 3px;">
+                                {{ usuario.id }}
+                            </code>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="info-label">Usuario (Username)</p>
+                        <p class="info-value">{{ usuario.username or usuario.email }}</p>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p class="info-label">Contraseña Temporal</p>
+                        <p class="info-value">
+                            {% if usuario.get('password_temporal', False) %}
+                                <span class="badge badge-warning">Sí (debe cambiar)</span>
+                            {% else %}
+                                <span class="badge badge-success">No (ya cambió)</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="info-label">Primer Inicio</p>
+                        <p class="info-value">
+                            {% if usuario.get('primer_inicio', False) %}
+                                <span class="badge badge-warning">Pendiente</span>
+                            {% else %}
+                                <span class="badge badge-success">Completado</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado del Usuario -->
+            <div class="info-card">
+                <h5 class="mb-3"><i class="fas fa-toggle-on"></i> Estado</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="info-label">Activo</p>
+                        <p class="info-value">
+                            {% if usuario.get('activo', True) %}
+                                <span class="badge badge-success" style="font-size: 0.9rem; padding: 8px 12px;">
+                                    <i class="fas fa-check-circle"></i> Activo
+                                </span>
+                            {% else %}
+                                <span class="badge badge-danger" style="font-size: 0.9rem; padding: 8px 12px;">
+                                    <i class="fas fa-times-circle"></i> Inactivo
+                                </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="info-label">Eliminado</p>
+                        <p class="info-value">
+                            {% if usuario.get('eliminado', False) %}
+                                <span class="badge badge-danger" style="font-size: 0.9rem; padding: 8px 12px;">
+                                    <i class="fas fa-trash"></i> Sí
+                                </span>
+                            {% else %}
+                                <span class="badge badge-success" style="font-size: 0.9rem; padding: 8px 12px;">
+                                    <i class="fas fa-check"></i> No
+                                </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="col-md-4">
+            <div class="card" style="position: sticky; top: 20px;">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-cog"></i> Acciones
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('editar_usuario_admin', usuario_id=usuario.id) }}" 
+                       class="btn btn-warning btn-block mb-2">
+                        <i class="fas fa-edit"></i> Editar Usuario
+                    </a>
+
+                    {% if not usuario.get('eliminado', False) %}
+                        {% if usuario.get('activo', True) %}
+                        <form method="POST" action="{{ url_for('desactivar_usuario_admin', usuario_id=usuario.id) }}" style="display: inline; width: 100%;">
+                            <button type="submit" class="btn btn-warning btn-block mb-2" 
+                                    onclick="return confirm('¿Desactivar este usuario?')">
+                                <i class="fas fa-ban"></i> Desactivar
+                            </button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{{ url_for('activar_usuario_admin', usuario_id=usuario.id) }}" style="display: inline; width: 100%;">
+                            <button type="submit" class="btn btn-success btn-block mb-2">
+                                <i class="fas fa-check"></i> Activar
+                            </button>
+                        </form>
+                        {% endif %}
+
+                        <form method="POST" action="{{ url_for('eliminar_usuario_admin', usuario_id=usuario.id) }}" style="display: inline; width: 100%;">
+                            <button type="submit" class="btn btn-danger btn-block" 
+                                    onclick="return confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.')">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </form>
+                    {% else %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-trash"></i> Este usuario ha sido eliminado.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información del Rol -->
+            <div class="card mt-3">
+                <div class="card-header bg-info text-white">
+                    <i class="fas fa-info-circle"></i> Rol: {{ usuario.rol.capitalize() }}
+                </div>
+                <div class="card-body">
+                    {% if usuario.rol == 'administrador' %}
+                        <p><strong>👑 Administrador</strong></p>
+                        <p class="small">Acceso completo al sistema. Puede gestionar usuarios, configurar sistema, ver reportes.</p>
+                    {% elif usuario.rol == 'docente' %}
+                        <p><strong>👨‍🏫 Docente</strong></p>
+                        <p class="small">Crear tareas, calificar estudiantes, ver calificaciones, gestionar cursos.</p>
+                    {% elif usuario.rol == 'estudiante' %}
+                        <p><strong>📚 Estudiante</strong></p>
+                        <p class="small">Ver tareas, entregar trabajos, ver calificaciones, ver horarios.</p>
+                    {% elif usuario.rol == 'coordinador' %}
+                        <p><strong>🎓 Coordinador</strong></p>
+                        <p class="small">Gestionar cursos, matrículas de estudiantes, aprobar inscripciones.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

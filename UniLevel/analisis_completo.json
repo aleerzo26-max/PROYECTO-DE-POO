@@ -1,0 +1,135 @@
+{
+  "formularios_sin_ruta": [],
+  "servicios": {},
+  "repositorios": {
+    "asistencia_service": [
+      "actualizar",
+      "buscar_por_docente",
+      "buscar_por_estudiante",
+      "buscar_por_estudiante_y_fecha",
+      "guardar",
+      "obtener_por_id"
+    ],
+    "autenticacion_service": [
+      "actualizar",
+      "buscar_por_correo",
+      "obtener_por_id"
+    ],
+    "calificacion_service": [
+      "actualizar",
+      "buscar_por_docente",
+      "buscar_por_estudiante",
+      "guardar",
+      "obtener_por_id"
+    ],
+    "entrega_service": [
+      "actualizar",
+      "buscar_por_estudiante",
+      "buscar_por_tarea",
+      "buscar_por_tarea_y_estudiante",
+      "guardar",
+      "obtener_por_id"
+    ],
+    "horario_service": [
+      "actualizar",
+      "guardar",
+      "obtener_por_matricula",
+      "obtener_todos"
+    ],
+    "importador_service": [],
+    "matricula_service": [
+      "actualizar",
+      "buscar_por_estudiante",
+      "buscar_por_paralelo",
+      "eliminar",
+      "guardar",
+      "obtener_por_id",
+      "obtener_todos"
+    ],
+    "notificacion_service": [
+      "actualizar",
+      "buscar_por_usuario",
+      "eliminar",
+      "guardar",
+      "obtener_por_id"
+    ],
+    "paralelo_service": [
+      "actualizar",
+      "buscar_por_paralelo",
+      "eliminar",
+      "existe_paralelo",
+      "guardar",
+      "obtener_por_id",
+      "obtener_todos"
+    ],
+    "periodo_academico_service": [
+      "obtener_por_id",
+      "obtener_todos"
+    ],
+    "reporte_service": [
+      "guardar",
+      "obtener_por_id",
+      "obtener_todos"
+    ],
+    "tarea_service": [
+      "actualizar",
+      "buscar_por_docente",
+      "buscar_por_estudiante",
+      "buscar_por_paralelo",
+      "eliminar",
+      "guardar",
+      "obtener_por_id"
+    ],
+    "usuario_service": [
+      "actualizar",
+      "buscar_por_cedula",
+      "buscar_por_correo",
+      "buscar_por_criterio",
+      "filtrar",
+      "guardar_usuario",
+      "listar_por_rol",
+      "obtener_por_id",
+      "obtener_todos"
+    ]
+  },
+  "dashboards": {
+    "administrador": {
+      "template": "admin/dashboard_admin.html",
+      "existe": true,
+      "ruta": "/dashboard/administrador"
+    },
+    "docente": {
+      "template": "docente/dashboard_docente.html",
+      "existe": true,
+      "ruta": "/dashboard/docente"
+    },
+    "coordinador": {
+      "template": "coordinador/dashboard_coordinador.html",
+      "existe": true,
+      "ruta": "/dashboard/coordinador"
+    },
+    "estudiante": {
+      "template": "estudiante/dashboard_estudiante.html",
+      "existe": true,
+      "ruta": "/dashboard/estudiante"
+    }
+  },
+  "rutas_dashboard": [
+    {
+      "ruta": "/dashboard/admin",
+      "rol": "admin"
+    },
+    {
+      "ruta": "/dashboard/docente",
+      "rol": "docente"
+    },
+    {
+      "ruta": "/dashboard/estudiante",
+      "rol": "estudiante"
+    },
+    {
+      "ruta": "/dashboard/coordinador",
+      "rol": "coordinador"
+    }
+  ]
+}

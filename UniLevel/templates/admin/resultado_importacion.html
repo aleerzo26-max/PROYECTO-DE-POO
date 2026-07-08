@@ -1,0 +1,106 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Resultado de Importación{% endblock %}
+{% block page_subtitle %}Resumen de usuarios importados y errores detectados.{% endblock %}
+
+{% block admin_content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <h2 class="text-primary">{{ estadisticas.total }}</h2>
+                        <p class="text-muted mb-0">Total procesados</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h2 class="text-success">{{ estadisticas.exitosos }}</h2>
+                        <p class="text-muted mb-0">Importados exitosamente</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h2 class="text-danger">{{ estadisticas.errores }}</h2>
+                        <p class="text-muted mb-0">Con errores</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h2 class="text-info">{{ estadisticas.porcentaje_exito }}%</h2>
+                        <p class="text-muted mb-0">Tasa de éxito</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if estadisticas.exitosos > 0 %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="fas fa-check-circle me-2"></i>
+    <strong>¡Importación completada!</strong>
+    Se importaron {{ estadisticas.exitosos }} usuario(s) exitosamente.
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
+{% if estadisticas.errores > 0 %}
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="fas fa-exclamation-triangle me-2"></i>Errores encontrados ({{ estadisticas.errores }})</h5>
+    </div>
+    <div class="card-body">
+        {% if estadisticas.errores_detalle %}
+        <ul class="list-group list-group-flush">
+            {% for error in estadisticas.errores_detalle %}
+            <li class="list-group-item">
+                <small class="text-muted">{{ error }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if estadisticas.errores > estadisticas.errores_detalle|length %}
+        <div class="alert alert-info mt-3 mb-0">
+            <small>Mostrando los primeros {{ estadisticas.errores_detalle|length }} de {{ estadisticas.errores }} errores.</small>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('listar_importar_usuarios') }}" class="btn btn-primary">
+                <i class="fas fa-arrow-left me-1"></i> Importar más usuarios
+            </a>
+            <a href="{{ url_for('dashboard_administrador') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-home me-1"></i> Volver al dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Detalles de la importación</h5>
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Archivo:</dt>
+            <dd class="col-sm-9">{{ estadisticas.archivo }}</dd>
+            
+            <dt class="col-sm-3">Fecha y hora:</dt>
+            <dd class="col-sm-9">{{ estadisticas.fecha }}</dd>
+            
+            <dt class="col-sm-3">Estado general:</dt>
+            <dd class="col-sm-9">
+                {% if estadisticas.errores == 0 %}
+                    <span class="badge bg-success">Completado exitosamente</span>
+                {% elif estadisticas.exitosos > 0 %}
+                    <span class="badge bg-warning">Importación parcial</span>
+                {% else %}
+                    <span class="badge bg-danger">Falló completamente</span>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+</div>
+
+{% endblock %}

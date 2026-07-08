@@ -1,0 +1,66 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Registrar Asistencia - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-plus-circle"></i> Registrar Asistencia</h1>
+            <p class="text-muted">Registra la asistencia de un estudiante para la fecha seleccionada.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Paralelo</label>
+                            <select name="paralelo_id" class="form-select" required>
+                                <option value="">Selecciona un paralelo</option>
+                                {% for paralelo in paralelos %}
+                                    <option value="{{ paralelo.id }}">{{ paralelo.nombre }} - {{ paralelo.asignatura }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Estudiante</label>
+                            <select name="estudiante_id" class="form-select" required>
+                                <option value="">Selecciona un estudiante</option>
+                                {% for estudiante in estudiantes %}
+                                    <option value="{{ estudiante.id }}">{{ estudiante.nombre }} - {{ estudiante.paralelo_nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" name="fecha" class="form-control" required max="{{ '%Y-%m-%d' | format() }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <select name="asistio" class="form-select" required>
+                                <option value="">Selecciona un estado</option>
+                                <option value="true">Presente</option>
+                                <option value="false">Ausente</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Comentario</label>
+                            <textarea name="comentario" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Registrar asistencia</button>
+                        <a href="{{ url_for('listar_asistencias_docente') }}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

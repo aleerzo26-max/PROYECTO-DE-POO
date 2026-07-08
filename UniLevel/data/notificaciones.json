@@ -1,0 +1,112 @@
+[
+    {
+        "id": "247613ed-0424-4a37-b2f5-c5f67345a3fc",
+        "usuario_id": "46bde2c2-a362-40f3-b15c-c6f39fddc12b",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-24T04:35:53.889118",
+        "leida": false
+    },
+    {
+        "id": "9b22bd2e-f598-44e5-ad46-417a06d4687d",
+        "usuario_id": "4ca52dc8-c9ec-426f-b663-2de60b7e1eb8",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-26T00:29:15.847453",
+        "leida": false
+    },
+    {
+        "id": "29d76d5f-a284-4d4d-9fba-a358a102cb0e",
+        "usuario_id": "b8428217-7157-4543-9581-5aa13f465e8e",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-27T03:54:29.327317",
+        "leida": false
+    },
+    {
+        "id": "380e9e0f-5f63-4de8-88b8-ea44ca73c1c2",
+        "usuario_id": "590f97e0-0753-43cf-8957-cf366f547899",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-27T03:55:37.342778",
+        "leida": false
+    },
+    {
+        "id": "9e16ab44-5532-4a5b-82a2-a59c41a27524",
+        "usuario_id": "81cae68d-014b-4a83-bba8-0371efdb8dda",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-28T23:06:02.173391",
+        "leida": true
+    },
+    {
+        "id": "73443b7c-0605-4429-8228-c2b243ef9776",
+        "usuario_id": "845ff807-e833-4395-bf87-ed50394d01f2",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-28T23:35:26.652083",
+        "leida": false
+    },
+    {
+        "id": "c170e70e-f870-4998-b4e5-6e476492f715",
+        "usuario_id": "a3bf2da0-eb2c-4bc8-b74b-2a025342bb93",
+        "titulo": "Credenciales temporales generadas",
+        "mensaje": "Se han generado credenciales temporales para el usuario mirandantho@gmail.com.",
+        "fecha": "2026-06-28T23:42:41.041506",
+        "leida": true,
+        "meta": {
+            "tipo": "credencial_temporal",
+            "usuario_id": "703996e2-bec8-4d86-aadc-e7ff1256daf8",
+            "correo": "mirandantho@gmail.com",
+            "password_temporal": "^\"D\"@jIX"
+        }
+    },
+    {
+        "id": "19eba7b8-540e-4172-a0b6-0c4b5da7caba",
+        "usuario_id": "6bdf3155-b634-4157-9b4c-dcb4a9f7548e",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-29T00:31:35.828559",
+        "leida": false
+    },
+    {
+        "id": "3cc7419d-abbc-4967-b696-a882946d6d3f",
+        "usuario_id": "43cf5761-3d31-4b52-bc98-a5aabbcc5e71",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-29T18:24:39.418843",
+        "leida": false
+    },
+    {
+        "id": "16af33ac-d662-4126-b55f-0dab8099b268",
+        "usuario_id": "43cf5761-3d31-4b52-bc98-a5aabbcc5e71",
+        "titulo": "Bienvenido a UniLevel",
+        "mensaje": "Tu cuenta ha sido creada exitosamente. Revisa tu perfil y cambia tu contraseña temporal.",
+        "fecha": "2026-06-29T18:24:39.421509",
+        "leida": false
+    },
+    {
+        "id": "a01b740d-ca17-425c-a155-f734cb53a9e3",
+        "usuario_id": "5cc1a158-4019-439e-8ea2-66c226488a9c",
+        "titulo": "Cuenta creada en UniLevel",
+        "mensaje": "Su cuenta ha sido creada exitosamente. Utilice la contraseña temporal y cambie su contraseña en el primer inicio de sesión.",
+        "fecha": "2026-06-29T18:28:39.443995",
+        "leida": false
+    },
+    {
+        "id": "45407f5d-ed47-4a06-9c7f-f282cdb68984",
+        "usuario_id": "5cc1a158-4019-439e-8ea2-66c226488a9c",
+        "titulo": "Bienvenido a UniLevel",
+        "mensaje": "Tu cuenta ha sido creada exitosamente. Revisa tu perfil y cambia tu contraseña temporal.",
+        "fecha": "2026-06-29T18:28:39.445852",
+        "leida": false
+    },
+    {
+        "id": "5492f778-402e-4f4b-af12-656c30b9d5ad",
+        "usuario_id": "usuario-demo",
+        "titulo": "Bienvenido a UniLevel",
+        "mensaje": "Tu cuenta ha sido creada exitosamente. Revisa tu perfil y cambia tu contraseña temporal.",
+        "fecha": "2026-07-06T04:51:15.526619",
+        "leida": false
+    }
+]

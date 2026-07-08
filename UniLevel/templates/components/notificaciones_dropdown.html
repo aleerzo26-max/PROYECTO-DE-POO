@@ -1,0 +1,37 @@
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-bell"></i>
+        {% if notificaciones_no_leidas > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ notificaciones_no_leidas }}
+            <span class="visually-hidden">notificaciones no leídas</span>
+        </span>
+        {% endif %}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end shadow" style="width: min(360px, 90vw);">
+        <li class="dropdown-header">Notificaciones recientes</li>
+        {% if notificaciones_recientes %}
+            {% for notificacion in notificaciones_recientes %}
+                <li>
+                    <a class="dropdown-item d-flex align-items-start" href="{{ url_for('listar_notificaciones') }}" style="white-space: normal;">
+                        <div class="me-3">
+                            <span class="badge {% if notificacion.leida %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                {% if notificacion.leida %}Leída{% else %}Nueva{% endif %}
+                            </span>
+                        </div>
+                        <div class="text-start flex-grow-1">
+                            <div class="fw-semibold">{{ notificacion.titulo }}</div>
+                            <div class="text-muted small" style="word-wrap:break-word; overflow-wrap:anywhere;">{{ notificacion.mensaje }}</div>
+                            <div class="text-muted small mt-1">{{ notificacion.fecha }}</div>
+                        </div>
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+            {% endfor %}
+        {% else %}
+            <li class="dropdown-item text-muted">Sin notificaciones recientes.</li>
+        {% endif %}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-center" href="{{ url_for('listar_notificaciones') }}">Ver todas las notificaciones</a></li>
+    </ul>
+</div>

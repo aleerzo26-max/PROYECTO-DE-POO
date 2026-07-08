@@ -1,0 +1,73 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Mis Asistencias - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-user-check"></i> Mi Historial de Asistencias</h1>
+            <p class="text-muted">Consulta tu porcentaje de asistencia y tus registros detallados.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h5 class="fw-semibold">Porcentaje de asistencia</h5>
+                <div class="progress rounded-pill mt-3" style="height: 28px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ porcentaje }}%" aria-valuenow="{{ porcentaje }}" aria-valuemin="0" aria-valuemax="100">
+                        {{ porcentaje }}%
+                    </div>
+                </div>
+                <p class="text-muted mt-3">Este valor se calcula sobre el total de registros disponibles.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Paralelo</th>
+                                    <th>Estado</th>
+                                    <th>Comentario</th>
+                                    <th>Detalle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if asistencias %}
+                                    {% for asistencia in asistencias %}
+                                        <tr>
+                                            <td>{{ asistencia.fecha }}</td>
+                                            <td>{{ asistencia.paralelo_nombre }}</td>
+                                            <td>
+                                                <span class="badge {% if asistencia.estado == 'Presente' %}bg-success{% else %}bg-danger{% endif %}">
+                                                    {{ asistencia.estado }}
+                                                </span>
+                                            </td>
+                                            <td>{{ asistencia.comentario or '-' }}</td>
+                                            <td>
+                                                <a href="{{ url_for('detalle_asistencia_estudiante', asistencia_id=asistencia.id) }}" class="btn btn-sm btn-outline-primary">Ver</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No se encontraron registros de asistencia.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,271 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Importar Usuarios - UniLevel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .import-section { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+    .template-box { background: white; border: 2px dashed #007bff; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+    .instruction-box { background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+    .file-input-wrapper { position: relative; display: inline-block; }
+    .file-input-wrapper input[type=file] { position: absolute; left: -9999px; }
+    .file-input-label { background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block; }
+    .file-input-label:hover { background: #0056b3; }
+    .step-badge { background: #007bff; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-upload"></i> Importar Usuarios</h2>
+            <p class="text-muted">Cargue un archivo CSV o XLSX con los datos de usuarios a importar.</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Formulario de Importación -->
+        <div class="col-md-8">
+            <div class="instruction-box">
+                <i class="fas fa-info-circle"></i> <strong>Instrucciones:</strong>
+                <ol class="mb-0 mt-2">
+                    <li>Descargue un template (CSV o XLSX)</li>
+                    <li>Llénelo con los datos de los usuarios</li>
+                    <li>Suba el archivo completado</li>
+                    <li>Revise los resultados de la importación</li>
+                </ol>
+            </div>
+
+            <!-- Sección de Plantillas -->
+            <div class="import-section">
+                <h5 class="mb-4"><i class="fas fa-file-alt"></i> Descargar Plantilla</h5>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="template-box">
+                            <h6><i class="fas fa-file-csv"></i> Formato CSV</h6>
+                            <p class="small text-muted">Archivo de valores separados por comas. Compatible con Excel.</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary" onclick="descargarTemplate('csv'); return false;">
+                                <i class="fas fa-download"></i> Descargar CSV
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="template-box">
+                            <h6><i class="fas fa-file-excel"></i> Formato XLSX</h6>
+                            <p class="small text-muted">Archivo de Excel moderno. Recomendado para mejor compatibilidad.</p>
+                            <a href="#" class="btn btn-sm btn-outline-success" onclick="descargarTemplate('xlsx'); return false;">
+                                <i class="fas fa-download"></i> Descargar XLSX
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Carga -->
+            <div class="import-section">
+                <h5 class="mb-4"><i class="fas fa-cloud-upload-alt"></i> Cargar Archivo</h5>
+
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="archivo" class="form-label"><strong>Seleccionar archivo</strong></label>
+                        <input type="file" class="form-control" id="archivo" name="archivo" 
+                               accept=".csv,.xlsx" required>
+                        <small class="form-text text-muted">
+                            Solo se aceptan archivos CSV y XLSX. Tamaño máximo: 5MB.
+                        </small>
+                    </div>
+
+                    <div id="file-preview" class="alert alert-info" style="display: none; margin-top: 10px;">
+                        <strong>Archivo seleccionado:</strong> <span id="file-name"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-upload"></i> Importar Usuarios
+                    </button>
+                    <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary btn-lg ml-2">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </form>
+            </div>
+
+            <!-- Información del Formato -->
+            <div class="import-section">
+                <h5 class="mb-4"><i class="fas fa-columns"></i> Estructura del Archivo</h5>
+
+                <p><strong>El archivo debe contener las siguientes columnas:</strong></p>
+
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Columna</th>
+                            <th>Tipo</th>
+                            <th>Requerido</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>nombre</strong></td>
+                            <td>Texto</td>
+                            <td><span class="badge badge-danger">Sí</span></td>
+                            <td>Nombre del usuario</td>
+                            <td>Juan</td>
+                        </tr>
+                        <tr>
+                            <td><strong>apellido</strong></td>
+                            <td>Texto</td>
+                            <td><span class="badge badge-danger">Sí</span></td>
+                            <td>Apellido del usuario</td>
+                            <td>Pérez</td>
+                        </tr>
+                        <tr>
+                            <td><strong>documento</strong></td>
+                            <td>Texto</td>
+                            <td><span class="badge badge-danger">Sí</span></td>
+                            <td>Cédula/Documento único</td>
+                            <td>1234567890</td>
+                        </tr>
+                        <tr>
+                            <td><strong>email</strong></td>
+                            <td>Email</td>
+                            <td><span class="badge badge-danger">Sí</span></td>
+                            <td>Correo electrónico único</td>
+                            <td>juan@unilevel.edu</td>
+                        </tr>
+                        <tr>
+                            <td><strong>telefono</strong></td>
+                            <td>Texto</td>
+                            <td><span class="badge badge-success">No</span></td>
+                            <td>Número de teléfono</td>
+                            <td>5551234567</td>
+                        </tr>
+                        <tr>
+                            <td><strong>rol</strong></td>
+                            <td>Texto</td>
+                            <td><span class="badge badge-danger">Sí</span></td>
+                            <td>Rol en el sistema</td>
+                            <td>estudiante</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="small text-muted mt-3">
+                    <strong>Roles válidos:</strong> administrador, docente, estudiante, coordinador
+                </p>
+            </div>
+
+            <!-- Validaciones -->
+            <div class="import-section">
+                <h5 class="mb-4"><i class="fas fa-check-circle"></i> Validaciones</h5>
+
+                <ul>
+                    <li><i class="fas fa-check text-success"></i> <strong>Cédula única:</strong> No puede haber documentos duplicados</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>Email único:</strong> No puede haber correos duplicados</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>Formato email:</strong> Debe contener @</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>Rol válido:</strong> Debe ser uno de los roles permitidos</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>Campos obligatorios:</strong> Todos deben estar presentes</li>
+                </ul>
+
+                <p class="small text-muted mt-3">
+                    Si hay errores, se mostrará un resumen de qué filas fallaron y por qué.
+                </p>
+            </div>
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="col-md-4">
+            <div class="card" style="position: sticky; top: 20px;">
+                <div class="card-header bg-success text-white">
+                    <i class="fas fa-lightbulb"></i> Consejos
+                </div>
+                <div class="card-body">
+                    <h6>¿Qué sucede al importar?</h6>
+                    <ul class="small">
+                        <li>✅ Se validan todos los datos</li>
+                        <li>✅ Se crea cuenta para cada usuario</li>
+                        <li>✅ Se genera contraseña temporal</li>
+                        <li>✅ Se envía notificación</li>
+                        <li>✅ Se crea credencial</li>
+                        <li>✅ primer_inicio = True</li>
+                        <li>✅ activo = True</li>
+                    </ul>
+
+                    <hr>
+
+                    <h6>Errores comunes</h6>
+                    <ul class="small">
+                        <li>❌ Email duplicado</li>
+                        <li>❌ Documento duplicado</li>
+                        <li>❌ Rol inválido</li>
+                        <li>❌ Campos vacíos</li>
+                        <li>❌ Formato incorrecto</li>
+                    </ul>
+
+                    <hr>
+
+                    <p class="small text-info">
+                        <strong>Consejo:</strong> Si hay errores, corrija el archivo y vuelva a intentar. Los usuarios exitosos se guardarán.
+                    </p>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fas fa-exclamation-triangle"></i> Importante
+                </div>
+                <div class="card-body">
+                    <p class="small mb-0">
+                        Asegúrese de que los datos sean correctos antes de importar. 
+                        El sistema validará cédulas y emails únicos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mostrar nombre del archivo seleccionado
+    document.getElementById('archivo').addEventListener('change', function(e) {
+        if (this.files.length > 0) {
+            const fileName = this.files[0].name;
+            const fileSize = (this.files[0].size / 1024).toFixed(2);
+            
+            document.getElementById('file-name').textContent = `${fileName} (${fileSize} KB)`;
+            document.getElementById('file-preview').style.display = 'block';
+        }
+    });
+
+    // Descargar template
+    function descargarTemplate(formato) {
+        // Simulación - en producción se generaría el archivo en el servidor
+        alert(`Descargando template ${formato.toUpperCase()}...`);
+        // Aquí iría la lógica para descargar el template
+    }
+
+    // Validación de formulario
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

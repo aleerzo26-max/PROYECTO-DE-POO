@@ -1,0 +1,22 @@
+[
+    {
+        "id": "ce1f5181-d5a5-4edc-942a-6326dc217b22",
+        "usuario_id": "test-user",
+        "tipo": "estadisticas",
+        "formato": "csv",
+        "nombre_archivo": "reporte_estadisticas_2026-06-24.csv",
+        "ruta_archivo": "C:\\Users\\usuario\\Documents\\PROYECTO-DE-POO\\UniLevel\\uploads\\reportes\\reporte_estadisticas_2026-06-24.csv",
+        "fecha_generacion": "2026-06-24T23:49:43.636974",
+        "descripcion": "Reporte de estadísticas del sistema UniLevel."
+    },
+    {
+        "id": "5c662f39-5308-43ca-931d-8a404f94e80f",
+        "usuario_id": "test-user",
+        "tipo": "estadisticas",
+        "formato": "xlsx",
+        "nombre_archivo": "reporte_estadisticas_2026-06-24.xlsx",
+        "ruta_archivo": "C:\\Users\\usuario\\Documents\\PROYECTO-DE-POO\\UniLevel\\uploads\\reportes\\reporte_estadisticas_2026-06-24.xlsx",
+        "fecha_generacion": "2026-06-24T23:49:50.443866",
+        "descripcion": "Reporte de estadísticas del sistema UniLevel."
+    }
+]

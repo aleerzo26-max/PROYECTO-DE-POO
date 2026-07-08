@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}{% if curso %}Editar Curso{% else %}Crear Curso{% endif %}{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card">
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input name="nombre" class="form-control" value="{{ curso.nombre if curso else '' }}" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Asignatura</label>
+                <select name="asignatura_id" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                    {% for a in asignaturas %}
+                    <option value="{{ a.id }}" {% if curso and curso.asignatura_id == a.id %}selected{% endif %}>{{ a.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Malla</label>
+                <select name="malla_id" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                    {% for m in mallas %}
+                    <option value="{{ m.id }}" {% if curso and curso.malla_id == m.id %}selected{% endif %}>{{ m.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea name="descripcion" class="form-control">{{ curso.descripcion if curso else '' }}</textarea>
+            </div>
+            <button class="btn btn-primary">Guardar</button>
+            <a href="{{ url_for('listar_cursos') }}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

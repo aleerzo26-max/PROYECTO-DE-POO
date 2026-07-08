@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Mis Calificaciones - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h3 fw-bold"><i class="fas fa-chart-line"></i> Mis Calificaciones</h1>
+                <p class="text-muted">Consulta tus notas y el promedio general.</p>
+            </div>
+            <div class="text-end">
+                <div class="fw-bold">Promedio general</div>
+                <div class="fs-3 text-primary">{{ promedio }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="tablaMisCalificaciones">
+                            <thead>
+                                <tr>
+                                    <th>Evaluación</th>
+                                    <th>Paralelo</th>
+                                    <th>Nota</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if calificaciones %}
+                                    {% for calificacion in calificaciones %}
+                                        <tr>
+                                            <td>{{ calificacion.evaluacion or 'General' }}</td>
+                                            <td>{{ calificacion.paralelo_nombre or 'Sin paralelo' }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if calificacion.nota >= 7 else 'warning' if calificacion.nota >= 4 else 'danger' }}">
+                                                    {{ calificacion.nota }}
+                                                </span>
+                                            </td>
+                                            <td>{{ calificacion.fecha_registro }}</td>
+                                            <td>
+                                                <a href="{{ url_for('detalle_calificacion_estudiante', calificacion_id=calificacion.id) }}" class="btn btn-sm btn-outline-primary">Ver</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">Aún no tienes calificaciones registradas.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

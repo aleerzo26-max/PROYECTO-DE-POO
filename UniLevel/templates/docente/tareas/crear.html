@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Crear Tarea - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-plus-circle"></i> Crear Tarea</h1>
+            <p class="text-muted">Publica una nueva tarea para uno de tus paralelos asignados.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Título</label>
+                            <input type="text" name="titulo" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Descripción</label>
+                            <textarea name="descripcion" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Paralelo</label>
+                            <select name="paralelo_id" class="form-select" required>
+                                <option value="">Selecciona un paralelo</option>
+                                {% for paralelo in paralelos %}
+                                    <option value="{{ paralelo.id }}">{{ paralelo.nombre }} - {{ paralelo.asignatura }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha límite</label>
+                            <input type="date" name="fecha_entrega" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Archivo de instrucciones</label>
+                            <input type="file" name="archivo" class="form-control" accept=".pdf,.docx,.zip">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear tarea</button>
+                        <a href="{{ url_for('listar_tareas_docente') }}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

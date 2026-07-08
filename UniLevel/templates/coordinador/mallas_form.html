@@ -1,0 +1,31 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}{% if malla %}Editar Malla{% else %}Crear Malla{% endif %}{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card">
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input name="nombre" class="form-control" value="{{ malla.nombre if malla else '' }}" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Carrera</label>
+                <select name="carrera_id" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                    {% for c in carreras %}
+                    <option value="{{ c.id }}" {% if malla and malla.carrera_id == c.id %}selected{% endif %}>{{ c.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea name="descripcion" class="form-control">{{ malla.descripcion if malla else '' }}</textarea>
+            </div>
+            <button class="btn btn-primary">Guardar</button>
+            <a href="{{ url_for('listar_mallas') }}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

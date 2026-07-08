@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Detalle de Tarea - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-file-alt"></i> {{ tarea.titulo }}</h1>
+            <p class="text-muted">{{ tarea.descripcion }}</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Paralelo</dt>
+                        <dd class="col-sm-9">{{ paralelo.nombre if paralelo else 'Sin paralelo' }}</dd>
+
+                        <dt class="col-sm-3">Asignatura</dt>
+                        <dd class="col-sm-9">{{ paralelo.asignatura if paralelo else 'Sin paralelo' }}</dd>
+
+                        <dt class="col-sm-3">Fecha límite</dt>
+                        <dd class="col-sm-9">{{ tarea.fecha_entrega }}</dd>
+
+                        <dt class="col-sm-3">Estado</dt>
+                        <dd class="col-sm-9">{{ entrega.estado if entrega else 'Pendiente' }}</dd>
+
+                        <dt class="col-sm-3">Archivo</dt>
+                        <dd class="col-sm-9">
+                            {% if tarea.archivo_instrucciones %}
+                                <a href="{{ url_for('descargar_archivo', filename=tarea.archivo_instrucciones) }}">Descargar instrucciones</a>
+                            {% else %}
+                                Sin archivo
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-upload"></i> Entregar tarea</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Archivo</label>
+                            <input type="file" name="archivo" class="form-control" accept=".pdf,.docx,.zip" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comentario</label>
+                            <textarea name="comentario" class="form-control" rows="3">{{ entrega.comentario if entrega else '' }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Entregar</button>
+                        <a href="{{ url_for('listar_tareas_estudiante') }}" class="btn btn-secondary">Volver</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

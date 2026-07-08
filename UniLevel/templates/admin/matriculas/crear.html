@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Registrar Matrícula{% endblock %}
+{% block page_subtitle %}Registre una nueva matrícula seleccionando estudiante, paralelo y periodo académico.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Matrículas
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <form method="POST" class="row g-4 needs-validation" novalidate>
+            <div class="col-md-6">
+                <label class="form-label required">Estudiante</label>
+                <select class="form-select" name="estudiante_id" required>
+                    <option value="">Seleccione un estudiante</option>
+                    {% for estudiante in estudiantes %}
+                    <option value="{{ estudiante.id }}">{{ estudiante.nombre }} {{ estudiante.apellido }} - {{ estudiante.email }}</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Seleccione un estudiante.</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label required">Paralelo</label>
+                <select class="form-select" name="paralelo_id" required>
+                    <option value="">Seleccione un paralelo</option>
+                    {% for paralelo in paralelos %}
+                    <option value="{{ paralelo.id }}">{{ paralelo.nombre }} - {{ paralelo.asignatura }} (Capacidad {{ paralelo.capacidad_maxima }})</option>
+                    {% endfor %}
+                </select>
+                <div class="invalid-feedback">Seleccione un paralelo.</div>
+            </div>
+            <div class="col-12 d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save me-2"></i> Matricular estudiante
+                </button>
+                <a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-secondary">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %}
+{% endblock %}

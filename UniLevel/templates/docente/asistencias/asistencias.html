@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Asistencias - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-calendar-check"></i> Gestión de Asistencias</h1>
+            <p class="text-muted">Consulta y administra los registros de asistencia de tus estudiantes.</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <a href="{{ url_for('registrar_asistencia_docente') }}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Registrar Asistencia
+            </a>
+            <form class="d-flex gap-2" method="get">
+                <select name="paralelo_id" class="form-select" style="min-width: 220px;">
+                    <option value="">Filtrar por paralelo</option>
+                    {% for paralelo in paralelos %}
+                        <option value="{{ paralelo.id }}" {% if filtro_paralelo == paralelo.id %}selected{% endif %}>
+                            {{ paralelo.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <input type="date" name="fecha" class="form-control" value="{{ filtro_fecha }}" />
+                <button type="submit" class="btn btn-outline-secondary">Filtrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Estudiante</th>
+                                    <th>Paralelo</th>
+                                    <th>Estado</th>
+                                    <th>Comentario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if asistencias %}
+                                    {% for asistencia in asistencias %}
+                                        <tr>
+                                            <td>{{ asistencia.fecha }}</td>
+                                            <td>{{ asistencia.estudiante_nombre }}</td>
+                                            <td>{{ asistencia.paralelo_nombre }}</td>
+                                            <td>
+                                                <span class="badge {% if asistencia.estado == 'Presente' %}bg-success{% else %}bg-danger{% endif %}">
+                                                    {{ asistencia.estado }}
+                                                </span>
+                                            </td>
+                                            <td>{{ asistencia.comentario or '-' }}</td>
+                                            <td>
+                                                <a href="{{ url_for('detalle_asistencia_docente', asistencia_id=asistencia.id) }}" class="btn btn-sm btn-outline-primary me-1">Ver</a>
+                                                <a href="{{ url_for('editar_asistencia_docente', asistencia_id=asistencia.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No se encontraron registros de asistencia.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

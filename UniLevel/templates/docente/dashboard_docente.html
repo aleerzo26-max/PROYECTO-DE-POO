@@ -1,0 +1,183 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard Docente - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold">
+                <i class="fas fa-chalkboard-user"></i> Dashboard Docente
+            </h1>
+            <p class="text-muted">
+                Bienvenido, <strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Estadísticas Docente -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-book" style="font-size: 2.5rem; color: #4e73df;"></i>
+                <h5>Mis Cursos</h5>
+                <h2>{{ mis_cursos }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-users" style="font-size: 2.5rem; color: #1cc88a;"></i>
+                <h5>Total Estudiantes</h5>
+                <h2>{{ total_estudiantes }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-tasks" style="font-size: 2.5rem; color: #f6c23e;"></i>
+                <h5>Tareas Pendientes</h5>
+                <h2>{{ tareas_pendientes }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-file-alt" style="font-size: 2.5rem; color: #36b9cc;"></i>
+                <h5>Calificaciones</h5>
+                <h2>{{ calificaciones }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel de Acciones -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cog"></i> Mis Acciones</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="{{ url_for('crear_tarea_docente') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-plus"></i> Crear Tarea
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_tareas_docente') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-list"></i> Ver Mis Tareas
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_tareas_docente') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-star"></i> Calificar Entregas
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_tareas_docente') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-chart-bar"></i> Ver Calificaciones
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('dashboard_docente') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-book"></i> Ver Mis Cursos
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('dashboard_docente') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-users"></i> Ver Estudiantes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tareas Recientes -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Tareas Recientes</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Tarea</th>
+                                    <th>Curso</th>
+                                    <th>Entregas</th>
+                                    <th>Fecha Límite</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if tareas_recientes %}
+                                    {% for tarea in tareas_recientes %}
+                                        <tr>
+                                            <td><strong>{{ tarea.titulo }}</strong></td>
+                                            <td>{{ tarea.paralelo_nombre }}</td>
+                                            <td><span class="badge bg-info">{{ tarea.entregas_count }}</span></td>
+                                            <td>{{ tarea.fecha_entrega[:10] if tarea.fecha_entrega else 'N/D' }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No hay tareas recientes.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perfil y Actividades -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-circle"></i> Mi Perfil</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle" alt="Avatar">
+                    </div>
+                    <h5 class="fw-bold">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+                    <p class="text-muted mb-2">{{ usuario.email }}</p>
+                    <span class="badge bg-warning badge-role">
+                        <i class="fas fa-chalkboard"></i> {{ usuario.rol.capitalize() }}
+                    </span>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <a href="#" class="btn btn-sm btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary w-100">
+                            <i class="fas fa-key"></i> Cambiar Contraseña
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Próximas Actividades -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Próximas Actividades</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-3 pb-3 border-bottom">
+                            <h6 class="mb-1">Vence: Ejercicios de Cálculo</h6>
+                            <small class="text-muted">En 6 días (2026-06-30)</small>
+                        </li>
+                        <li class="mb-3 pb-3 border-bottom">
+                            <h6 class="mb-1">Calificar: Ensayo sobre POO</h6>
+                            <small class="text-muted">En 12 días (2026-07-05)</small>
+                        </li>
+                        <li>
+                            <h6 class="mb-1">Reunión: Junta de Docentes</h6>
+                            <small class="text-muted">En 7 días (2026-07-01)</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

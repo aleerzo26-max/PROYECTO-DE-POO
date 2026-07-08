@@ -1,0 +1,206 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Editar Usuario - UniLevel{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; }
+    .required::after { content: " *"; color: red; }
+    .form-group label { font-weight: 600; }
+    .info-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+    .readonly { background-color: #e9ecef; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2><i class="fas fa-user-edit"></i> Editar Usuario</h2>
+            <p class="text-muted">Modifique los datos del usuario según sea necesario.</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <i class="fas fa-exclamation-triangle"></i> <strong>Importante:</strong> 
+        Algunos campos no pueden ser modificados (Documento, Email). Si necesita cambiarlos, 
+        elimine y cree un nuevo usuario.
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="POST" class="needs-validation" novalidate>
+                <!-- Información Personal -->
+                <div class="form-section">
+                    <h5 class="mb-4">Información Personal</h5>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombre" class="required">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" 
+                                       value="{{ usuario.nombre }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="apellido" class="required">Apellido</label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" 
+                                       value="{{ usuario.apellido }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="documento">Cédula/Documento (No editable)</label>
+                                <input type="text" class="form-control readonly" id="documento" 
+                                       value="{{ usuario.documento }}" disabled>
+                                <small class="form-text text-muted">No se puede modificar este campo</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email (No editable)</label>
+                                <input type="email" class="form-control readonly" id="email" 
+                                       value="{{ usuario.email }}" disabled>
+                                <small class="form-text text-muted">No se puede modificar este campo</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="telefono">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" 
+                                       value="{{ usuario.telefono or '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="rol" class="required">Rol</label>
+                                <select class="form-control" id="rol" name="rol" required>
+                                    <option value="">-- Seleccionar rol --</option>
+                                    <option value="administrador" {% if usuario.rol == 'administrador' %}selected{% endif %}>Administrador</option>
+                                    <option value="docente" {% if usuario.rol == 'docente' %}selected{% endif %}>Docente</option>
+                                    <option value="estudiante" {% if usuario.rol == 'estudiante' %}selected{% endif %}>Estudiante</option>
+                                    <option value="coordinador" {% if usuario.rol == 'coordinador' %}selected{% endif %}>Coordinador</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Cuenta -->
+                <div class="form-section">
+                    <h5 class="mb-4">Estado de Cuenta</h5>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Activo</label>
+                                <div>
+                                    {% if usuario.get('activo', True) %}
+                                        <span class="badge badge-success">Activo</span>
+                                    {% else %}
+                                        <span class="badge badge-danger">Inactivo</span>
+                                    {% endif %}
+                                </div>
+                                <small class="form-text text-muted">Se puede cambiar desde la lista de usuarios</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Primer Inicio</label>
+                                <div>
+                                    {% if usuario.get('primer_inicio', True) %}
+                                        <span class="badge badge-warning">Pendiente</span>
+                                    {% else %}
+                                        <span class="badge badge-success">Completado</span>
+                                    {% endif %}
+                                </div>
+                                <small class="form-text text-muted">Se completa cuando el usuario cambiacontraseña</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                    <a href="{{ url_for('listar_usuarios') }}" class="btn btn-secondary btn-lg ml-2">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Panel de Ayuda -->
+        <div class="col-md-4">
+            <div class="card" style="position: sticky; top: 20px;">
+                <div class="card-header bg-warning text-dark">
+                    <i class="fas fa-info-circle"></i> Información
+                </div>
+                <div class="card-body">
+                    <h6>Campos que puedo editar:</h6>
+                    <ul class="small">
+                        <li>✏️ Nombre</li>
+                        <li>✏️ Apellido</li>
+                        <li>✏️ Teléfono</li>
+                        <li>✏️ Rol</li>
+                    </ul>
+
+                    <hr>
+
+                    <h6>Campos bloqueados:</h6>
+                    <ul class="small">
+                        <li>🔒 Cédula/Documento</li>
+                        <li>🔒 Email</li>
+                    </ul>
+
+                    <hr>
+
+                    <p class="small"><strong>¿Por qué?</strong> Documento y Email son únicos y se usan como identificadores. Para cambiarlos, cree un nuevo usuario.</p>
+
+                    <hr>
+
+                    <h6>Acciones adicionales:</h6>
+                    <ul class="small">
+                        <li>📋 <a href="{{ url_for('ver_usuario_admin', usuario_id=usuario.id) }}">Ver detalles</a></li>
+                        <li>🔄 <a href="{{ url_for('listar_usuarios') }}">Activar/Desactivar</a></li>
+                        <li>🗑️ <a href="{{ url_for('listar_usuarios') }}">Eliminar usuario</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Validación de formulario
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}

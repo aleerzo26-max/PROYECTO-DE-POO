@@ -1,0 +1,28 @@
+[
+    {
+        "id": "183912ae-1ecf-46a0-8585-232181eea62c",
+        "nombre": "Carlos",
+        "apellido": "García",
+        "documento": "9876543210",
+        "email": "carlos@example.com",
+        "telefono": "5559876543",
+        "username": "carlos@example.com",
+        "rol": "estudiante",
+        "password_hash": "f6778896f7a79ccf46560938a05a6e5332391054552031f73066d7857e8776db",
+        "password_temporal": false,
+        "primer_inicio": false
+    },
+    {
+        "id": "f6f2ac37-b97e-452c-b1d6-df36c8e3d3f8",
+        "nombre": "Prof. Ana",
+        "apellido": "López",
+        "documento": "1111111111",
+        "email": "ana@example.com",
+        "telefono": "5551111111",
+        "username": "ana@example.com",
+        "rol": "docente",
+        "password_hash": "cda77821aee7c0cc4c2ae257a3d7a7c53d1e96c417b48c3cfd766d13269be7e4",
+        "password_temporal": true,
+        "primer_inicio": true
+    }
+]

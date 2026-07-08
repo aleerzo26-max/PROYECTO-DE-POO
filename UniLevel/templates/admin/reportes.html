@@ -1,0 +1,62 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Reportes Académicos{% endblock %}
+{% block page_subtitle %}Genera y descarga reportes de estadísticas del sistema UniLevel.{% endblock %}
+
+{% block page_actions %}
+<form action="{{ url_for('generar_reporte_admin') }}" method="post" class="d-flex gap-2">
+    <select name="formato" class="form-select form-select-sm">
+        <option value="csv">CSV</option>
+        <option value="xlsx">XLSX</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">
+        <i class="fas fa-download me-1"></i> Generar reporte
+    </button>
+</form>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Reportes Generados</h5>
+    </div>
+    <div class="card-body">
+        {% if reportes %}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Formato</th>
+                        <th>Nombre</th>
+                        <th>Generado por</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in reportes %}
+                    <tr>
+                        <td>{{ reporte.fecha_generacion }}</td>
+                        <td>{{ reporte.tipo }}</td>
+                        <td>{{ reporte.formato.upper() }}</td>
+                        <td>{{ reporte.nombre_archivo }}</td>
+                        <td>{{ reporte.usuario_id }}</td>
+                        <td>
+                            <a href="{{ url_for('descargar_reporte_admin', reporte_id=reporte.id) }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-file-download"></i> Descargar
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="alert alert-info">
+                No se han generado reportes aún. Usa el formulario superior para crear uno.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

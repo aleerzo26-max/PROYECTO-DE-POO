@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Detalle de Asistencia - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-info-circle"></i> Detalle de Asistencia</h1>
+            <p class="text-muted">Información del registro de asistencia seleccionado.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Fecha</dt>
+                        <dd class="col-sm-8">{{ asistencia.fecha }}</dd>
+
+                        <dt class="col-sm-4">Estudiante</dt>
+                        <dd class="col-sm-8">{{ asistencia.estudiante_nombre }}</dd>
+
+                        <dt class="col-sm-4">Paralelo</dt>
+                        <dd class="col-sm-8">{{ asistencia.paralelo_nombre }}</dd>
+
+                        <dt class="col-sm-4">Estado</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge {% if asistencia.estado == 'Presente' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ asistencia.estado }}
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Comentario</dt>
+                        <dd class="col-sm-8">{{ asistencia.comentario or '-' }}</dd>
+
+                        <dt class="col-sm-4">Registrado</dt>
+                        <dd class="col-sm-8">{{ asistencia.fecha_registro }}</dd>
+
+                        <dt class="col-sm-4">Última actualización</dt>
+                        <dd class="col-sm-8">{{ asistencia.fecha_actualizacion }}</dd>
+                    </dl>
+
+                    <div class="mt-4">
+                        <a href="{{ url_for('editar_asistencia_docente', asistencia_id=asistencia.id) }}" class="btn btn-outline-primary me-2">Editar</a>
+                        <a href="{{ url_for('listar_asistencias_docente') }}" class="btn btn-secondary">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

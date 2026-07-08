@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Calificar Entrega - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-clipboard-check"></i> Calificar Entrega</h1>
+            <p class="text-muted">Califica la entrega del estudiante para la tarea <strong>{{ tarea.titulo }}</strong>.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Estudiante</label>
+                            <input type="text" class="form-control" value="{{ estudiante.nombre }} {{ estudiante.apellido }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Archivo entregado</label>
+                            <input type="text" class="form-control" value="{{ entrega.archivo }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Puntuación (0-10)</label>
+                            <input type="number" step="0.1" min="0" max="10" name="puntuacion" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Comentario</label>
+                            <textarea name="comentario" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar calificación</button>
+                        <a href="{{ url_for('ver_tarea_docente', tarea_id=tarea.id) }}" class="btn btn-secondary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Tarea - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold"><i class="fas fa-file-alt"></i> {{ tarea.titulo }}</h1>
+            <p class="text-muted">{{ tarea.descripcion }}</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Paralelo</dt>
+                        <dd class="col-sm-9">{{ paralelo.nombre if paralelo else 'No disponible' }}</dd>
+
+                        <dt class="col-sm-3">Asignatura</dt>
+                        <dd class="col-sm-9">{{ paralelo.asignatura if paralelo else 'No disponible' }}</dd>
+
+                        <dt class="col-sm-3">Fecha límite</dt>
+                        <dd class="col-sm-9">{{ tarea.fecha_entrega }}</dd>
+
+                        <dt class="col-sm-3">Estado</dt>
+                        <dd class="col-sm-9">{{ tarea.estado }}</dd>
+
+                        <dt class="col-sm-3">Archivo</dt>
+                        <dd class="col-sm-9">
+                            {% if tarea.archivo_instrucciones %}
+                                <a href="{{ url_for('descargar_archivo', filename=tarea.archivo_instrucciones) }}">Descargar instrucciones</a>
+                            {% else %}
+                                Sin archivo
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Entregas</h5>
+                </div>
+                <div class="card-body">
+                    {% if entregas %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Estudiante</th>
+                                        <th>Archivo</th>
+                                        <th>Fecha de entrega</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entrega in entregas %}
+                                        <tr>
+                                            <td>{{ entrega.estudiante.nombre }} {{ entrega.estudiante.apellido }}</td>
+                                            <td>
+                                                {% if entrega.archivo %}
+                                                    <a href="{{ url_for('descargar_archivo', filename=entrega.archivo) }}">{{ entrega.archivo }}</a>
+                                                {% else %}
+                                                    Sin archivo
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ entrega.fecha_entrega }}</td>
+                                            <td>{{ entrega.estado }}</td>
+                                            <td>
+                                                <a href="{{ url_for('calificar_entrega_docente', entrega_id=entrega.id) }}" class="btn btn-sm btn-outline-primary">Calificar</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p>No hay entregas registradas aún.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

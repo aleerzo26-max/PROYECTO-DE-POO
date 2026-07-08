@@ -1,0 +1,49 @@
+{% extends "admin/base_admin.html" %}
+
+{% block page_title %}Detalle de Matrícula{% endblock %}
+{% block page_subtitle %}Información detallada de la matrícula seleccionada.{% endblock %}
+
+{% block page_actions %}
+<a href="{{ url_for('listar_matriculas_admin') }}" class="btn btn-outline-secondary">
+    <i class="fas fa-arrow-left me-2"></i> Volver a Matrículas
+</a>
+{% endblock %}
+
+{% block admin_content %}
+<div class="card admin-card mb-4">
+    <div class="card-body">
+        <div class="row gy-3">
+            <div class="col-md-6">
+                <h5 class="mb-3">Estudiante</h5>
+                <p><strong>Nombre:</strong> {{ estudiante.nombre }} {{ estudiante.apellido }}</p>
+                <p><strong>Email:</strong> {{ estudiante.email }}</p>
+                <p><strong>Documento:</strong> {{ estudiante.documento }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-3">Paralelo</h5>
+                <p><strong>Nombre:</strong> {{ paralelo.nombre }}</p>
+                <p><strong>Asignatura:</strong> {{ paralelo.asignatura }}</p>
+                <p><strong>Docente:</strong> {{ paralelo.docente_id }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-3">Detalle de matrícula</h5>
+                <p><strong>Periodo académico:</strong> {{ matricula.periodo_academico or 'No definido' }}</p>
+                <p><strong>Fecha matrícula:</strong> {{ matricula.fecha_matricula }}</p>
+                <p><strong>Estado:</strong> {{ matricula.estado|capitalize }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-3">Acciones</h5>
+                {% if matricula.estado == 'matriculado' %}
+                <form method="POST" action="{{ url_for('cancelar_matricula_admin', matricula_id=matricula.id) }}" onsubmit="return confirm('¿Desea cancelar esta matrícula?');">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-times me-2"></i> Cancelar Matrícula
+                    </button>
+                </form>
+                {% else %}
+                <span class="badge bg-secondary">No hay acciones disponibles</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard Admin - UniLevel{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 fw-bold">
+                <i class="fas fa-tachometer-alt"></i> Dashboard Administrativo
+            </h1>
+            <p class="text-muted">
+                Bienvenido, <strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Estadísticas Principales -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-users" style="font-size: 2.5rem; color: #4e73df;"></i>
+                <h5>Total de Usuarios</h5>
+                <h2>{{ total_usuarios }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-graduation-cap" style="font-size: 2.5rem; color: #1cc88a;"></i>
+                <h5>Total de Estudiantes</h5>
+                <h2>{{ total_estudiantes }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-chalkboard-user" style="font-size: 2.5rem; color: #f6c23e;"></i>
+                <h5>Total de Docentes</h5>
+                <h2>{{ total_docentes }}</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <i class="fas fa-chart-line" style="font-size: 2.5rem; color: #36b9cc;"></i>
+                <h5>Actividad General</h5>
+                <h2>{{ (total_usuarios + total_estudiantes + total_docentes) // 3 }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Panel de Control -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-tasks"></i> Panel de Control</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <a href="{{ url_for('crear_usuario_admin') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-user-plus"></i> Crear Nuevo Usuario
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_usuarios') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-list"></i> Listar Usuarios
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('importar_usuarios_admin') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-file-import"></i> Importar Usuarios
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="#" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-cog"></i> Gestionar Roles
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{{ url_for('listar_reportes_admin') }}" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-download"></i> Generar Reportes
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="#" class="btn btn-outline-primary w-100 p-3">
+                                <i class="fas fa-database"></i> Configuración Sistema
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información del Perfil -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-circle"></i> Mi Perfil</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <img src="https://via.placeholder.com/100" class="rounded-circle" alt="Avatar">
+                    </div>
+                    <h5 class="fw-bold">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+                    <p class="text-muted mb-2">{{ usuario.email }}</p>
+                    <span class="badge bg-primary badge-role">
+                        <i class="fas fa-crown"></i> {{ usuario.rol.capitalize() }}
+                    </span>
+
+                    <div class="mt-4 pt-4 border-top">
+                        <a href="#" class="btn btn-sm btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-edit"></i> Editar Perfil
+                        </a>
+                        <a href="#" class="btn btn-sm btn-outline-secondary w-100">
+                            <i class="fas fa-key"></i> Cambiar Contraseña
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Últimas Actividades -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Últimas Actividades</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-circle" style="font-size: 0.25rem;"></i>
+                                Usuario nuevo creado
+                            </small>
+                            <br>
+                            <small class="text-muted">Hace 2 horas</small>
+                        </li>
+                        <li class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-circle" style="font-size: 0.25rem;"></i>
+                                Importación de datos completada
+                            </small>
+                            <br>
+                            <small class="text-muted">Hace 1 día</small>
+                        </li>
+                        <li>
+                            <small class="text-muted">
+                                <i class="fas fa-circle" style="font-size: 0.25rem;"></i>
+                                Reporte descargado
+                            </small>
+                            <br>
+                            <small class="text-muted">Hace 2 días</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
