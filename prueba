@@ -1,0 +1,9 @@
+if __name__ == "__main__":
+    factories = {
+        "tarjeta": TarjetaFactory(),
+        "paypal": PayPalFactory(),
+        "quickpay": QuickPayFactory()
+    }
+
+    for nombre, factory in factories.items():
+        print(factory.ejecutar(100.00))
